@@ -1,4 +1,4 @@
-import 'package:flutter_example/hive_constants.dart';
+import 'package:flutter_example/shared/constants/hive_constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 part 'post_model.g.dart';

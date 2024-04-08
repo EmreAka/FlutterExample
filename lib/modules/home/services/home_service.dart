@@ -2,7 +2,7 @@ import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/models/post/post_model.dart';
-import 'package:flutter_example/modules/home/services/post_http_client.dart';
+import 'package:flutter_example/shared/clients/post_http_client.dart';
 
 class HomeService implements IHomeService {
   final ICacheManager _cacheManager;

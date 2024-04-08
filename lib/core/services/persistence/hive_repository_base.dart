@@ -1,5 +1,5 @@
 import 'package:flutter_example/core/interfaces/repository_async_interface.dart';
-import 'package:flutter_example/hive_constants.dart';
+import 'package:flutter_example/shared/constants/hive_constants.dart';
 import 'package:flutter_example/core/models/cache/cache_model.dart';
 import 'package:flutter_example/modules/home/models/post/post_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';

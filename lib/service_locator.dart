@@ -6,8 +6,8 @@ import 'package:flutter_example/core/services/network/network_manager.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/interfaces/post_repository_async_interface.dart';
 import 'package:flutter_example/modules/home/services/home_service.dart';
-import 'package:flutter_example/modules/home/services/post_repository_async.dart';
-import 'package:flutter_example/modules/home/services/post_http_client.dart';
+import 'package:flutter_example/shared/repositories/post_repository_async.dart';
+import 'package:flutter_example/shared/clients/post_http_client.dart';
 import 'package:get_it/get_it.dart';
 
 final serviceLocator = GetIt.instance;
