@@ -22,14 +22,14 @@ class HomeService implements IHomeService {
   Future<Result<List<PostModel>, Exception>> getPosts() async {
     final cachedResult = await _cacheManager.getItems<PostModel>('posts');
 
-    if (cachedResult != null) {
+    if (cachedResult is Success) {
       log('Cache read', name: 'HomeService.getPosts');
-      return Success(cachedResult);
+      return cachedResult;
     }
 
     final posts = await _postHttpClient.getPosts();
 
-    if (cachedResult == null && posts is Success) {
+    if (posts is Success) {
       log('Cache write', name: 'HomeService.getPosts');
       await _cacheManager.putItem('posts',(posts as Success).value, const Duration(minutes: 1));
     }

@@ -1,6 +1,7 @@
 import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
 import 'package:flutter_example/core/interfaces/repository_async_interface.dart';
 import 'package:flutter_example/core/models/cache/cache_model.dart';
+import 'package:flutter_example/core/models/result_model.dart';
 
 class CacheManager implements ICacheManager {
   late final IRepositoryAsync<CacheModel> _cacheDatabaseManager;
@@ -8,47 +9,71 @@ class CacheManager implements ICacheManager {
   CacheManager(this._cacheDatabaseManager);
 
   @override
-  Future<T?> getItem<T>(String key) async {
-    final cacheResult = await _cacheDatabaseManager.getItem(key);
-    final isValid = await _validateCache(cacheResult);
+  Future<Result<T, Exception>> getItem<T>(String key) async {
+    try {
+      final cacheResult = await _cacheDatabaseManager.getItem(key);
+      final isValid = await _validateCache(cacheResult);
 
-    if (!isValid) {
-      return null;
+      if (!isValid) {
+        return Failure(Exception('Cache is not valid'));
+      }
+
+      return Success(cacheResult!.value);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
     }
-
-    return cacheResult?.value;
   }
 
   @override
-  Future<List<T>?> getItems<T>(String key) async {
-    final cacheResult = await _cacheDatabaseManager.getItem(key);
-    final isValid = await _validateCache(cacheResult);
+  Future<Result<List<T>, Exception>> getItems<T>(String key) async {
+    try {
+      final cacheResult = await _cacheDatabaseManager.getItem(key);
+      final isValid = await _validateCache(cacheResult);
 
-    if (!isValid) {
-      return null;
+      if (!isValid) {
+        return Failure(Exception('Cache is not valid'));
+      }
+
+      return Success(cacheResult!.value.cast<T>());
+    } catch (e) {
+      return Failure(Exception(e.toString()));
     }
-
-    return cacheResult?.value?.cast<T>();
   }
 
   @override
-  Future<void> putItem<T>(String key, T item, Duration duration) async {
-    final cacheModel = CacheModel(
-      expiration: DateTime.now().add(duration),
-      value: item,
-    );
+  Future<Result<bool, Exception>> putItem<T>(
+      String key, T item, Duration duration) async {
+    try {
+      final cacheModel = CacheModel(
+        expiration: DateTime.now().add(duration),
+        value: item,
+      );
 
-    await _cacheDatabaseManager.putItem(key, cacheModel);
+      await _cacheDatabaseManager.putItem(key, cacheModel);
+      return const Success(true);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
   }
 
   @override
-  Future<void> removeItem(String key) async {
-    await _cacheDatabaseManager.removeItem(key);
+  Future<Result<bool, Exception>> removeItem(String key) async {
+    try {
+      await _cacheDatabaseManager.removeItem(key);
+      return const Success(true);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
   }
 
   @override
-  Future<void> clearAll() async {
-    await _cacheDatabaseManager.clearAll();
+  Future<Result<bool, Exception>> clearAll() async {
+    try {
+      await _cacheDatabaseManager.clearAll();
+      return const Success(true);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
   }
 
   Future<bool> _validateCache(CacheModel? model) async {

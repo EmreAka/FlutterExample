@@ -1,11 +1,13 @@
+import 'package:flutter_example/core/models/result_model.dart';
+
 abstract class ICacheManager {
-  Future<void> putItem<T>(String key, T item, Duration duration);
+  Future<Result<bool, Exception>> putItem<T>(String key, T item, Duration duration);
 
-  Future<T?> getItem<T>(String key);
+  Future<Result<T, Exception>> getItem<T>(String key);
 
-  Future<List<T>?> getItems<T>(String key);
+  Future<Result<List<T>, Exception>> getItems<T>(String key);
 
-  Future<void> removeItem(String key);
+  Future<Result<bool, Exception>> removeItem(String key);
 
-  Future<void> clearAll();
+  Future<Result<bool, Exception>> clearAll();
 }
