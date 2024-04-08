@@ -36,4 +36,10 @@ class HomeService implements IHomeService {
 
     return posts;
   }
+
+  @override
+  Future<Result<PostModel, Exception>> createPost(PostModel post) async {
+    final createdPost = await _postHttpClient.createPost(post);
+    return createdPost;
+  }
 }

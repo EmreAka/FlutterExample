@@ -17,23 +17,43 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              await getPost();
-            },
-            style: ButtonStyle(
-              foregroundColor: MaterialStateColor.resolveWith(
-                  (states) => Colors.black87),
-              backgroundColor: MaterialStateColor.resolveWith(
-                  (states) => Colors.black87),
-              textStyle: MaterialStateProperty.resolveWith(
-                (states) => const TextStyle(color: Colors.white),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                await getPost();
+              },
+              style: ButtonStyle(
+                foregroundColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.black87),
+                backgroundColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.black87),
+                textStyle: MaterialStateProperty.resolveWith(
+                  (states) => const TextStyle(color: Colors.white),
+                ),
               ),
+              child:
+                  const Text('Get a post', style: TextStyle(color: Colors.white)),
             ),
-            child:
-                const Text('Get a post from cache', style: TextStyle(color: Colors.white)),
-          ),
+            ElevatedButton(
+              onPressed: () async {
+                await createPost();
+              },
+              style: ButtonStyle(
+                foregroundColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.black87),
+                backgroundColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.black87),
+                textStyle: MaterialStateProperty.resolveWith(
+                  (states) => const TextStyle(color: Colors.white),
+                ),
+              ),
+              child:
+                  const Text('Create a post', style: TextStyle(color: Colors.white)),
+            ),
+          ],
         ),
       ),
     );

@@ -7,6 +7,7 @@ import 'package:flutter_example/modules/home/models/post/post_model.dart';
 abstract class IPostHttpClient {
   Future<Result<PostModel, Exception>> getPostById(int id);
   Future<Result<List<PostModel>, Exception>> getPosts();
+  Future<Result<PostModel, Exception>> createPost(PostModel post);
 }
 
 class PostHttpClient implements IPostHttpClient {
@@ -32,5 +33,14 @@ class PostHttpClient implements IPostHttpClient {
         result, (value) => JsonParser.parseList(PostModel.fromJson, value));
 
     return posts;
+  }
+
+  Future<Result<PostModel, Exception>> createPost(PostModel post) async {
+    final result = await _networkManager.post('posts', data: post.toJson());
+
+    final Result<PostModel, Exception> createdPost = ResultConverter.toResult(
+        result, (value) => JsonParser.parseMap(PostModel.fromJson, value));
+
+    return createdPost;
   }
 }
