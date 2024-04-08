@@ -1,8 +1,13 @@
+import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/mixin/home_mixin.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_example/modules/home/state/home_state.dart';
+import 'package:signals/signals_flutter.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final IHomeService homeService;
+
+  const HomeView({super.key, required this.homeService});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -26,33 +31,58 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                 await getPost();
               },
               style: ButtonStyle(
-                foregroundColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.black87),
-                backgroundColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.black87),
+                foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black87),
+                backgroundColor: MaterialStateColor.resolveWith((states) => Colors.black87),
                 textStyle: MaterialStateProperty.resolveWith(
                   (states) => const TextStyle(color: Colors.white),
                 ),
               ),
-              child:
-                  const Text('Get a post', style: TextStyle(color: Colors.white)),
+              child: const Text('Get a post', style: TextStyle(color: Colors.white)),
             ),
             ElevatedButton(
               onPressed: () async {
                 await createPost();
               },
               style: ButtonStyle(
-                foregroundColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.black87),
-                backgroundColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.black87),
+                foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black87),
+                backgroundColor: MaterialStateColor.resolveWith((states) => Colors.black87),
                 textStyle: MaterialStateProperty.resolveWith(
                   (states) => const TextStyle(color: Colors.white),
                 ),
               ),
-              child:
-                  const Text('Create a post', style: TextStyle(color: Colors.white)),
+              child: const Text('Create a post', style: TextStyle(color: Colors.white)),
             ),
+            const SizedBox(height: 24),
+            Center(
+              child: Watch((context) {
+                final state = loading.value;
+                return switch (state) {
+                  LoadingState() => const CircularProgressIndicator(),
+                  SuccessState(value: final value) => Table(
+                      columnWidths: const {
+                        0: FlexColumnWidth(1),
+                        1: FlexColumnWidth(2),
+                      },
+                      children: [
+                        TableRow(children: [
+                          const Text('ID:'),
+                          Text('${value.id}'),
+                        ]),
+                        TableRow(children: [
+                          const Text('Title:'),
+                          Text(value.title),
+                        ]),
+                        TableRow(children: [
+                          const Text('Body:'),
+                          Text(value.body),
+                        ]),
+                      ],
+                    ),
+                  ErrorState() => const Text('Error'),
+                  IdleState() => const Text('Idle'),
+                };
+              }),
+            )
           ],
         ),
       ),
