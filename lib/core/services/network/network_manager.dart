@@ -29,14 +29,12 @@ class NetworkManager implements INetworkManager {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
   }) async {
     try {
       var dioResponse = await _dio.get(
         path,
         data: data,
         queryParameters: queryParameters,
-        cancelToken: cancelToken,
       );
 
       final result = _toHttpResult(dioResponse);
@@ -52,14 +50,12 @@ class NetworkManager implements INetworkManager {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
   }) async {
     try {
       final dioResponse = await _dio.post(
         path,
         data: data,
         queryParameters: queryParameters,
-        cancelToken: cancelToken,
       );
 
       final result = _toHttpResult(dioResponse);
@@ -74,14 +70,12 @@ class NetworkManager implements INetworkManager {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
   }) async {
     try {
       final dioResponse = await _dio.put(
         path,
         data: data,
         queryParameters: queryParameters,
-        cancelToken: cancelToken,
       );
 
       final result = _toHttpResult(dioResponse);
@@ -96,14 +90,12 @@ class NetworkManager implements INetworkManager {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
   }) async {
     try {
       final dioResponse = await _dio.patch(
         path,
         data: data,
         queryParameters: queryParameters,
-        cancelToken: cancelToken,
       );
 
       final result = _toHttpResult(dioResponse);
@@ -118,14 +110,12 @@ class NetworkManager implements INetworkManager {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
   }) async {
     try {
       final dioResponse = await _dio.delete(
         path,
         data: data,
         queryParameters: queryParameters,
-        cancelToken: cancelToken,
       );
 
       final result = _toHttpResult(dioResponse);
