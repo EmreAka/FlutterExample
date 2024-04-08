@@ -1,18 +1,21 @@
 import 'package:flutter_example/modules/home/view/home_view.dart';
 import 'package:flutter_example/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   await Hive.initFlutter();
-  registerServices();
-  await serviceLocator.allReady();
+  final di = await DependencyInjection.registerServices();
 
-  runApp(const MyApp());
+  runApp(MyApp(
+    di: di,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GetIt di;
+  const MyApp({super.key, required this.di});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: HomeView(
-        homeService: serviceLocator.get(),
+        homeService: di.get(),
       ),
     );
   }

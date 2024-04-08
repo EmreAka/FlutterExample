@@ -10,32 +10,37 @@ import 'package:flutter_example/shared/repositories/post_repository_async.dart';
 import 'package:flutter_example/shared/clients/post_http_client.dart';
 import 'package:get_it/get_it.dart';
 
-final serviceLocator = GetIt.instance;
+class DependencyInjection {
+  static final _serviceLocator = GetIt.instance;
 
-void registerServices() {
-  serviceLocator.registerSingletonAsync<ICacheRepositoryAsync>(() async {
-    final cacheDatabaseManager = CacheRepositoryAsync();
-    await cacheDatabaseManager.init();
-    return cacheDatabaseManager;
-  });
+  static Future<GetIt> registerServices() async {
+    _serviceLocator.registerSingletonAsync<ICacheRepositoryAsync>(() async {
+      final cacheDatabaseManager = CacheRepositoryAsync();
+      await cacheDatabaseManager.init();
+      return cacheDatabaseManager;
+    });
 
-  serviceLocator.registerSingletonWithDependencies<ICacheManager>(() {
-    return CacheManager(serviceLocator.get<ICacheRepositoryAsync>());
-  }, dependsOn: [ICacheRepositoryAsync]);
+    _serviceLocator.registerSingletonWithDependencies<ICacheManager>(() {
+      return CacheManager(_serviceLocator.get<ICacheRepositoryAsync>());
+    }, dependsOn: [ICacheRepositoryAsync]);
 
-  serviceLocator.registerSingletonAsync<IPostRepositoryAsync>(() async {
-    final postDatabaseManager = PostRepositoryAsync();
-    await postDatabaseManager.init();
-    return postDatabaseManager;
-  });
+    _serviceLocator.registerSingletonAsync<IPostRepositoryAsync>(() async {
+      final postDatabaseManager = PostRepositoryAsync();
+      await postDatabaseManager.init();
+      return postDatabaseManager;
+    });
 
-  serviceLocator.registerFactory<IPostHttpClient>(() =>
-      PostHttpClient(NetworkManager('https://jsonplaceholder.typicode.com/')));
+    _serviceLocator.registerFactory<IPostHttpClient>(
+        () => PostHttpClient(NetworkManager('https://jsonplaceholder.typicode.com/')));
 
-  serviceLocator.registerFactory<IHomeService>(
-    () => HomeService(
-      serviceLocator.get<ICacheManager>(),
-      serviceLocator.get<IPostHttpClient>(),
-    ),
-  );
+    _serviceLocator.registerFactory<IHomeService>(
+      () => HomeService(
+        _serviceLocator.get<ICacheManager>(),
+        _serviceLocator.get<IPostHttpClient>(),
+      ),
+    );
+
+    await _serviceLocator.allReady();
+    return _serviceLocator;
+  }
 }
