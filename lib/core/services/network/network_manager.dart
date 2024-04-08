@@ -1,58 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
 import 'package:flutter_example/core/models/network/http_result_model.dart';
-
-abstract class INetworkManager {
-  void addBearerToken(String bearerToken);
-
-  Future<HttpResult<dynamic, HttpException>> get(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onReceiveProgress,
-  });
-
-  Future<Response<T>> post<T>(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  });
-
-  Future<Response<T>> put<T>(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  });
-
-  Future<Response<T>> patch<T>(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  });
-
-  Future<Response<T>> delete<T>(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-  });
-}
 
 class NetworkManager implements INetworkManager {
   late final Dio _dio;
@@ -79,17 +29,15 @@ class NetworkManager implements INetworkManager {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
     CancelToken? cancelToken,
-    ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      var dioResponse = await _dio.get(path,
-          data: data,
-          queryParameters: queryParameters,
-          options: options,
-          cancelToken: cancelToken,
-          onReceiveProgress: onReceiveProgress);
+      var dioResponse = await _dio.get(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        cancelToken: cancelToken,
+      );
 
       final result = _toHttpResult(dioResponse);
 
@@ -100,75 +48,91 @@ class NetworkManager implements INetworkManager {
   }
 
   @override
-  Future<Response<T>> post<T>(
+  Future<HttpResult<dynamic, HttpException>> post(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
     CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) {
-    return _dio.post<T>(path,
+  }) async {
+    try {
+      final dioResponse = await _dio.post(
+        path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
         cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress);
+      );
+
+      final result = _toHttpResult(dioResponse);
+      return result;
+    } catch (error) {
+      return InternalServerError(HttpException(error.toString()));
+    }
   }
 
   @override
-  Future<Response<T>> put<T>(
+  Future<HttpResult<dynamic, HttpException>> put(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
     CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) {
-    return _dio.put<T>(path,
+  }) async {
+    try {
+      final dioResponse = await _dio.put(
+        path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
         cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress);
+      );
+
+      final result = _toHttpResult(dioResponse);
+      return result;
+    } catch (error) {
+      return InternalServerError(HttpException(error.toString()));
+    }
   }
 
   @override
-  Future<Response<T>> patch<T>(
+  Future<HttpResult<dynamic, HttpException>> patch(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
     CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) {
-    return _dio.patch<T>(path,
+  }) async {
+    try {
+      final dioResponse = await _dio.patch(
+        path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
         cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress);
+      );
+
+      final result = _toHttpResult(dioResponse);
+      return result;
+    } catch (error) {
+      return InternalServerError(HttpException(error.toString()));
+    }
   }
 
   @override
-  Future<Response<T>> delete<T>(
+  Future<HttpResult<dynamic, HttpException>> delete(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
     CancelToken? cancelToken,
-  }) {
-    return _dio.delete<T>(path,
+  }) async {
+    try {
+      final dioResponse = await _dio.delete(
+        path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken);
+        cancelToken: cancelToken,
+      );
+
+      final result = _toHttpResult(dioResponse);
+      return result;
+    } catch (error) {
+      return InternalServerError(HttpException(error.toString()));
+    }
   }
 
   HttpResult<dynamic, HttpException> _toHttpResult(

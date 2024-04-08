@@ -1,7 +1,7 @@
 import 'package:flutter_example/core/helpers/result_converter.dart';
+import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/core/helpers/json_parser.dart';
-import 'package:flutter_example/core/services/network/network_manager.dart';
 import 'package:flutter_example/modules/home/models/post/post_model.dart';
 
 abstract class IPostHttpClient {

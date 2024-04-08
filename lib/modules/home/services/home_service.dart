@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
@@ -21,12 +23,14 @@ class HomeService implements IHomeService {
     final cachedResult = await _cacheManager.getItems<PostModel>('posts');
 
     if (cachedResult != null) {
+      log('Cache read', name: 'HomeService.getPosts');
       return Success(cachedResult);
     }
 
     final posts = await _postHttpClient.getPosts();
 
     if (cachedResult == null && posts is Success) {
+      log('Cache write', name: 'HomeService.getPosts');
       await _cacheManager.putItem('posts',(posts as Success).value, const Duration(minutes: 1));
     }
 
