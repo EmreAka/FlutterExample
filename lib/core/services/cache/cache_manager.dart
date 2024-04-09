@@ -1,10 +1,10 @@
 import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
-import 'package:flutter_example/core/interfaces/repository_async_interface.dart';
+import 'package:flutter_example/core/interfaces/cache_repository_async_interface.dart';
 import 'package:flutter_example/core/models/cache/cache_model.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 
 class CacheManager implements ICacheManager {
-  late final IRepositoryAsync<CacheModel> _cacheDatabaseManager;
+  late final ICacheRepositoryAsync _cacheDatabaseManager;
 
   CacheManager(this._cacheDatabaseManager);
 
