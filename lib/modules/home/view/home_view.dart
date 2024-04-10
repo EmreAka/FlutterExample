@@ -88,4 +88,21 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       ),
     );
   }
+
+  @override
+  void closeLoadingDialog() {
+    if (mounted && Navigator.of(context).canPop()) Navigator.of(context).pop();
+  }
+
+  @override
+  void showLoadingDialog() {
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        )
+      );
+    }
+  }
 }

@@ -8,7 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 mixin HomeMixin on State<HomeView> {
+  void showLoadingDialog();
+  void closeLoadingDialog();
+
   final loading = signal<HomeState>(const IdleState());
+
+  @override
+  void initState() {
+    super.initState();
+
+    /* WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await createPost();
+    }); */
+  }
 
   Future getPost() async {
     loading.value = const LoadingState();
@@ -33,6 +45,8 @@ mixin HomeMixin on State<HomeView> {
   }
 
   Future<void> createPost() async {
+    showLoadingDialog();
+
     final post = PostModel(
       id: 5,
       title: 'Title of the post',
@@ -40,7 +54,7 @@ mixin HomeMixin on State<HomeView> {
     );
 
     final result = await widget.homeService.createPost(post);
-    
+
     switch (result) {
       case Success(value: final value):
         log(value.id.toString());
@@ -51,5 +65,7 @@ mixin HomeMixin on State<HomeView> {
         log('Error: $exception');
         break;
     }
+
+    closeLoadingDialog();
   }
 }
