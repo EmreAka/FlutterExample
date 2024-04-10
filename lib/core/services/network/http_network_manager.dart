@@ -42,8 +42,7 @@ class HttpNetworkManager implements INetworkManager {
   }
 
   @override
-  Future<HttpResult<dynamic, HttpException>> get(String path,
-      {IModel? data, Map<String, dynamic>? queryParameters}) async {
+  Future<HttpResult<dynamic, HttpException>> get(String path, {Map<String, dynamic>? queryParameters}) async {
     try {
       final httpResponse = await _httpClient.get(
         Uri.parse("$_baseUrl/$path"),

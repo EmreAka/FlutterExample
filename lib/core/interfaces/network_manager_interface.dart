@@ -7,7 +7,6 @@ abstract class INetworkManager {
 
   Future<HttpResult<dynamic, HttpException>> get(
     String path, {
-    IModel? data,
     Map<String, dynamic>? queryParameters,
   });
 

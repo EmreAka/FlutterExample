@@ -31,11 +31,11 @@ class DependencyInjection {
       return postDatabaseManager;
     });
 
-    /* _serviceLocator.registerFactory<IPostHttpClient>(
-        () => PostHttpClient(DioNetworkManager('https://jsonplaceholder.typicode.com/'))); */
-
     _serviceLocator.registerFactory<IPostHttpClient>(
-        () => PostHttpClient(HttpNetworkManager('https://jsonplaceholder.typicode.com/')));
+        () => PostHttpClient(DioNetworkManager('https://jsonplaceholder.typicode.com/')));
+
+    /* _serviceLocator.registerFactory<IPostHttpClient>(
+        () => PostHttpClient(HttpNetworkManager('https://jsonplaceholder.typicode.com/'))); */
 
     _serviceLocator.registerFactory<IHomeService>(
       () => HomeService(
