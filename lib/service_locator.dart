@@ -2,7 +2,7 @@ import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
 import 'package:flutter_example/core/interfaces/cache_repository_async_interface.dart';
 import 'package:flutter_example/core/services/cache/cache_manager.dart';
 import 'package:flutter_example/core/services/cache/cache_repository_async.dart';
-import 'package:flutter_example/core/services/network/network_manager.dart';
+import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/interfaces/post_repository_async_interface.dart';
 import 'package:flutter_example/modules/home/services/home_service.dart';
@@ -31,7 +31,7 @@ class DependencyInjection {
     });
 
     _serviceLocator.registerFactory<IPostHttpClient>(
-        () => PostHttpClient(NetworkManager('https://jsonplaceholder.typicode.com/')));
+        () => PostHttpClient(DioNetworkManager('https://jsonplaceholder.typicode.com/')));
 
     _serviceLocator.registerFactory<IHomeService>(
       () => HomeService(

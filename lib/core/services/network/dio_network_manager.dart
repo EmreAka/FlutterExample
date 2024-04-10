@@ -4,17 +4,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
 import 'package:flutter_example/core/models/network/http_result_model.dart';
 
-class NetworkManager implements INetworkManager {
+class DioNetworkManager implements INetworkManager {
   late final Dio _dio;
 
-  NetworkManager(String baseUrl) {
+  DioNetworkManager(String baseUrl) {
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl,
       validateStatus: (status) => true,
     ));
   }
 
-  NetworkManager.withToken(String baseUrl, String bearerToken) {
+  DioNetworkManager.withToken(String baseUrl, String bearerToken) {
     _dio = Dio(BaseOptions(baseUrl: baseUrl));
   }
 
