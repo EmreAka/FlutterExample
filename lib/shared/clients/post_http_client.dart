@@ -37,7 +37,7 @@ class PostHttpClient implements IPostHttpClient {
 
   @override
   Future<Result<PostModel, Exception>> createPost(PostModel post) async {
-    final result = await _networkManager.post('posts', data: post.toJson());
+    final result = await _networkManager.post('posts', data: post);
 
     final Result<PostModel, Exception> createdPost = ResultConverter.toResult(
         result, (value) => JsonParser.parseMap(PostModel.fromJson, value));

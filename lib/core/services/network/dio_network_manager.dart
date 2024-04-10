@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
+import 'package:flutter_example/core/models/model_interface.dart';
 import 'package:flutter_example/core/models/network/http_result_model.dart';
 
 class DioNetworkManager implements INetworkManager {
@@ -27,13 +28,13 @@ class DioNetworkManager implements INetworkManager {
   @override
   Future<HttpResult<dynamic, HttpException>> get(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
       var dioResponse = await _dio.get(
         path,
-        data: data,
+        data: data?.toJson(),
         queryParameters: queryParameters,
       );
 
@@ -48,13 +49,13 @@ class DioNetworkManager implements INetworkManager {
   @override
   Future<HttpResult<dynamic, HttpException>> post(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
       final dioResponse = await _dio.post(
         path,
-        data: data,
+        data: data?.toJson(),
         queryParameters: queryParameters,
       );
 
@@ -68,13 +69,13 @@ class DioNetworkManager implements INetworkManager {
   @override
   Future<HttpResult<dynamic, HttpException>> put(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
       final dioResponse = await _dio.put(
         path,
-        data: data,
+        data: data?.toJson(),
         queryParameters: queryParameters,
       );
 
@@ -88,13 +89,13 @@ class DioNetworkManager implements INetworkManager {
   @override
   Future<HttpResult<dynamic, HttpException>> patch(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
       final dioResponse = await _dio.patch(
         path,
-        data: data,
+        data: data?.toJson(),
         queryParameters: queryParameters,
       );
 
@@ -108,13 +109,13 @@ class DioNetworkManager implements INetworkManager {
   @override
   Future<HttpResult<dynamic, HttpException>> delete(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
       final dioResponse = await _dio.delete(
         path,
-        data: data,
+        data: data?.toJson(),
         queryParameters: queryParameters,
       );
 

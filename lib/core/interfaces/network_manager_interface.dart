@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_example/core/models/model_interface.dart';
 import 'package:flutter_example/core/models/network/http_result_model.dart';
 
 abstract class INetworkManager {
@@ -6,31 +7,31 @@ abstract class INetworkManager {
 
   Future<HttpResult<dynamic, HttpException>> get(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   });
 
   Future<HttpResult<dynamic, HttpException>> post(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   });
 
   Future<HttpResult<dynamic, HttpException>> put(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   });
 
   Future<HttpResult<dynamic, HttpException>> patch(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   });
 
   Future<HttpResult<dynamic, HttpException>> delete(
     String path, {
-    Object? data,
+    IModel? data,
     Map<String, dynamic>? queryParameters,
   });
 }
