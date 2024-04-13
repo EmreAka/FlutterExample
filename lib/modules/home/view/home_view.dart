@@ -114,10 +114,11 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
   void showLoadingDialog() {
     if (mounted) {
       showDialog(
-          context: context,
-          builder: (context) => const Center(
-                child: CircularProgressIndicator(),
-              ));
+        context: context,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
   }
 }
