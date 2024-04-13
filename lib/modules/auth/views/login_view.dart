@@ -48,6 +48,7 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                 decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
+                  
                 ),
               ),
               const SizedBox(height: 20.0),
