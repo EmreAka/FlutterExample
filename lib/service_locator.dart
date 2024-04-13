@@ -3,6 +3,8 @@ import 'package:flutter_example/core/interfaces/cache_repository_async_interface
 import 'package:flutter_example/core/services/cache/cache_manager.dart';
 import 'package:flutter_example/core/services/cache/cache_repository_async.dart';
 import 'package:flutter_example/core/services/network/dio_network_manager.dart';
+import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
+import 'package:flutter_example/modules/auth/services/auth_service.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/interfaces/post_repository_async_interface.dart';
 import 'package:flutter_example/modules/home/services/home_service.dart';
@@ -43,9 +45,15 @@ class DependencyInjection {
       ),
     ); */
 
-    _serviceLocator.registerFactory(
+    _serviceLocator.registerFactory<IUserHttpClient>(
       () => UserHttpClient(
         DioNetworkManager('https://jsonplaceholder.typicode.com/'),
+      ),
+    );
+
+    _serviceLocator.registerFactory<IAuthService>(
+      () => AuthService(
+        _serviceLocator.get<IUserHttpClient>(),
       ),
     );
 

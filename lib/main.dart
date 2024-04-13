@@ -33,7 +33,9 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: '/login',
             name: 'login',
-            builder: (context, state) => const LoginView(),
+            builder: (context, state) => LoginView(
+              authService: di.get(),
+            ),
           ),
           GoRoute(
             path: '/home',

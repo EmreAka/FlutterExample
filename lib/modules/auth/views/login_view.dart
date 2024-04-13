@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
 import 'package:flutter_example/modules/auth/mixins/login_mixin.dart';
 import 'package:flutter_example/shared/widgets/example_button.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  final IAuthService authService;
+
+  const LoginView({super.key, required this.authService});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -31,15 +34,18 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                 ),
               ),
               const SizedBox(height: 20.0),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20.0),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
                 ),
