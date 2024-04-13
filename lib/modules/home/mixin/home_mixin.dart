@@ -12,34 +12,35 @@ mixin HomeMixin on State<HomeView> {
   void closeLoadingDialog();
 
   final loading = signal<HomeState>(const IdleState());
+  var posts = <PostModel>[];
 
   @override
   void initState() {
     super.initState();
 
-    /* WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await createPost();
-    }); */
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await getPost();
+    });
   }
 
   Future getPost() async {
     loading.value = const LoadingState();
+    showLoadingDialog();
 
-    final posts = await widget.homeService.getPosts();
+    final result = await widget.homeService.getPosts();
 
-    switch (posts) {
+    switch (result) {
       case Success(value: final value):
-        for (final post in value) {
-          log(post.id.toString());
-          log(post.title);
-          log(post.body);
-        }
-
+        setState(() {
+          posts = value;
+        });
         loading.value = SuccessState(value.first);
+        closeLoadingDialog();
         break;
       case Failure(exception: final exception):
         log('Error: $exception');
         loading.value = const ErrorState();
+        closeLoadingDialog();
         break;
     }
   }

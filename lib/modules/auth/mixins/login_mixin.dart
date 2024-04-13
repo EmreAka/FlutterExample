@@ -26,4 +26,11 @@ mixin LoginMixin on State<LoginView> {
       }
     }
   }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 }
