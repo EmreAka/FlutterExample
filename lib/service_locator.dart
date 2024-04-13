@@ -6,6 +6,7 @@ import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/interfaces/post_repository_async_interface.dart';
 import 'package:flutter_example/modules/home/services/home_service.dart';
+import 'package:flutter_example/shared/clients/users_http_client.dart';
 import 'package:flutter_example/shared/repositories/post_repository_async.dart';
 import 'package:flutter_example/shared/clients/post_http_client.dart';
 import 'package:get_it/get_it.dart';
@@ -31,10 +32,22 @@ class DependencyInjection {
     });
 
     _serviceLocator.registerFactory<IPostHttpClient>(
-        () => PostHttpClient(DioNetworkManager('https://jsonplaceholder.typicode.com/')));
+      () => PostHttpClient(
+        DioNetworkManager('https://jsonplaceholder.typicode.com/'),
+      ),
+    );
 
     /* _serviceLocator.registerFactory<IPostHttpClient>(
-        () => PostHttpClient(HttpNetworkManager('https://jsonplaceholder.typicode.com/'))); */
+      () => PostHttpClient(
+        HttpNetworkManager('https://jsonplaceholder.typicode.com/'),
+      ),
+    ); */
+
+    _serviceLocator.registerFactory(
+      () => UserHttpClient(
+        DioNetworkManager('https://jsonplaceholder.typicode.com/'),
+      ),
+    );
 
     _serviceLocator.registerFactory<IHomeService>(
       () => HomeService(

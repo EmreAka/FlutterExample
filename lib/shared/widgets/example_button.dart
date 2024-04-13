@@ -18,9 +18,6 @@ class ExampleButton extends StatelessWidget {
         textStyle: MaterialStateProperty.resolveWith(
           (states) => const TextStyle(color: Colors.white),
         ),
-        padding: MaterialStateProperty.resolveWith(
-          (states) => const EdgeInsets.symmetric(vertical: 15),
-        ),
       ),
       child: Text(
         text,
