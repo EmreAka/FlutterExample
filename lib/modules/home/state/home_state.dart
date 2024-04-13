@@ -6,7 +6,7 @@ sealed class HomeState {
 
 final class SuccessState extends HomeState {
   const SuccessState(this.value);
-  final PostModel value;
+  final List<PostModel> value;
 }
 
 final class ErrorState extends HomeState {

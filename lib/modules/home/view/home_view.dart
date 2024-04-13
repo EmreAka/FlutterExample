@@ -20,18 +20,26 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       appBar: AppBar(
         title: const Text('Posts'),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(24),
-        itemBuilder: (context, index) => Card(
-          child: ListTile(
-            title: Text(posts[index].title),
-            subtitle: Text(posts[index].body),
-          ),
-        ),
-        separatorBuilder: (context, index) => const SizedBox(
-          height: 10,
-        ),
-        itemCount: posts.length,
+      body: Watch(
+        (context) => switch (posts.value) {
+          SuccessState(value: final posts) => ListView.separated(
+              padding: const EdgeInsets.all(24),
+              itemBuilder: (context, index) => Card(
+                child: ListTile(
+                  title: Text(posts[index].title),
+                  subtitle: Text(posts[index].body),
+                ),
+              ),
+              separatorBuilder: (context, index) => const SizedBox(
+                height: 10,
+              ),
+              itemCount: posts.length,
+            ),
+          ErrorState() => const Center(
+              child: Text('Posts could not be loaded. Please try again later.'),
+            ),
+          _ => const SizedBox()
+        },
       ),
     );
   }
@@ -72,7 +80,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
           const SizedBox(height: 24),
           Center(
             child: Watch((context) {
-              final state = loading.value;
+              final state = posts.value;
               return switch (state) {
                 LoadingState() => const CircularProgressIndicator(),
                 SuccessState(value: final value) => Table(
@@ -83,15 +91,15 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                     children: [
                       TableRow(children: [
                         const Text('ID:'),
-                        Text('${value.id}'),
+                        Text('${value.first.id}'),
                       ]),
                       TableRow(children: [
                         const Text('Title:'),
-                        Text(value.title),
+                        Text(value.first.title),
                       ]),
                       TableRow(children: [
                         const Text('Body:'),
-                        Text(value.body),
+                        Text(value.first.body),
                       ]),
                     ],
                   ),
@@ -107,7 +115,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
 
   @override
   void closeLoadingDialog() {
-    if (mounted && Navigator.of(context).canPop()) Navigator.of(context).pop();
+    if (mounted && Navigator.of(context).canPop() && isDialogOpen) Navigator.of(context).pop();
   }
 
   @override

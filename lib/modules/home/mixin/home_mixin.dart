@@ -11,36 +11,61 @@ mixin HomeMixin on State<HomeView> {
   void showLoadingDialog();
   void closeLoadingDialog();
 
-  final loading = signal<HomeState>(const IdleState());
-  var posts = <PostModel>[];
+  final posts = signal<HomeState>(const IdleState());
+  late final EffectCleanup disposePostsEffect;
+  var isDialogOpen = false;
 
   @override
   void initState() {
-    super.initState();
+    disposePostsEffect = registerPostsEffect();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await getPost();
     });
+
+    super.initState();
+  }
+
+  EffectCleanup registerPostsEffect() {
+    return effect(
+    () {
+      switch (posts.value) {
+        case LoadingState():
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            showLoadingDialog();
+            isDialogOpen = true;
+          });
+          break;
+        default:
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            closeLoadingDialog();
+            isDialogOpen = false;
+          });
+          break;
+      }
+    },
+  );
+  }
+
+  @override
+  void dispose() {
+    disposePostsEffect();
+    posts.dispose();
+    super.dispose();
   }
 
   Future getPost() async {
-    loading.value = const LoadingState();
-    showLoadingDialog();
+    posts.value = const LoadingState();
 
     final result = await widget.homeService.getPosts();
 
     switch (result) {
       case Success(value: final value):
-        setState(() {
-          posts = value;
-        });
-        loading.value = SuccessState(value.first);
-        closeLoadingDialog();
+        posts.value = SuccessState(value);
         break;
       case Failure(exception: final exception):
         log('Error: $exception');
-        loading.value = const ErrorState();
-        closeLoadingDialog();
+        posts.value = const ErrorState();
         break;
     }
   }
