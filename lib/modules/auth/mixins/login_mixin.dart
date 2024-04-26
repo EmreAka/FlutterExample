@@ -28,6 +28,12 @@ mixin LoginMixin on State<LoginView> {
   }
 
   @override
+  void initState() {
+    emailController.text = 'Sincere@april.biz';
+    super.initState();
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
