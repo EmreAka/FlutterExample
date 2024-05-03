@@ -59,15 +59,10 @@ mixin HomeMixin on State<HomeView> {
 
     final result = await widget.homeService.getPosts();
 
-    switch (result) {
-      case Success(value: final value):
-        posts.value = SuccessState(value);
-        break;
-      case Failure(exception: final exception):
-        log('Error: $exception');
-        posts.value = const ErrorState();
-        break;
-    }
+    posts.value = switch (result) {
+      Success(value: final value) => SuccessState(value),
+      Failure(exception: final _) => const ErrorState()
+    };
   }
 
   Future<void> createPost() async {
