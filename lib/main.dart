@@ -24,9 +24,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Caching',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.dark,
       routerConfig: GoRouter(
         initialLocation: '/login',
         routes: [

@@ -20,6 +20,10 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       appBar: AppBar(
         title: const Text('Posts'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: createPost,
+        child: const Icon(Icons.add),
+      ),
       body: Watch(
         (context) => switch (posts.value) {
           SuccessState(value: final posts) => ListView.separated(

@@ -72,6 +72,7 @@ mixin HomeMixin on State<HomeView> {
 
   Future<void> createPost() async {
     showLoadingDialog();
+    isDialogOpen = true;
 
     final post = PostModel(
       id: 5,

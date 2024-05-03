@@ -12,13 +12,13 @@ class ExampleButton extends StatelessWidget {
       onPressed: () {
         onPressed();
       },
-      style: ButtonStyle(
+      /* style: ButtonStyle(
         foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black87),
         backgroundColor: MaterialStateColor.resolveWith((states) => Colors.black87),
         textStyle: MaterialStateProperty.resolveWith(
           (states) => const TextStyle(color: Colors.white),
         ),
-      ),
+      ), */
       child: Text(
         text,
         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 20),

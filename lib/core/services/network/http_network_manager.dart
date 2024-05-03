@@ -5,7 +5,6 @@ import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
 import 'package:flutter_example/core/models/model_interface.dart';
 import 'package:flutter_example/core/models/network/http_result_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 class HttpNetworkManager implements INetworkManager {
   late final String _baseUrl;
@@ -62,7 +61,10 @@ class HttpNetworkManager implements INetworkManager {
     try {
       final httpResponse = await _httpClient.patch(
         Uri.parse("$_baseUrl/$path"),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $bearerToken'},
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
+          HttpHeaders.contentTypeHeader: 'application/json'
+        },
         body: jsonEncode(
           data?.toJson(),
         ),
@@ -81,7 +83,10 @@ class HttpNetworkManager implements INetworkManager {
     try {
       final httpResponse = await _httpClient.post(
         Uri.parse("$_baseUrl/$path"),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $bearerToken'},
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
+          HttpHeaders.contentTypeHeader: 'application/json'
+        },
         body: jsonEncode(
           data?.toJson(),
         ),
@@ -100,7 +105,10 @@ class HttpNetworkManager implements INetworkManager {
     try {
       final httpResponse = await _httpClient.put(
         Uri.parse("$_baseUrl/$path"),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer $bearerToken'},
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
+          HttpHeaders.contentTypeHeader: 'application/json'
+        },
         body: jsonEncode(
           data?.toJson(),
         ),
@@ -113,7 +121,7 @@ class HttpNetworkManager implements INetworkManager {
     }
   }
 
-  HttpResult<dynamic, HttpException> _toHttpResult(Response httpResponse) {
+  HttpResult<dynamic, HttpException> _toHttpResult(http.Response httpResponse) {
     final HttpResult<dynamic, HttpException> result = switch (httpResponse.statusCode) {
       200 => Ok(jsonDecode(httpResponse.body)),
       201 => Created(jsonDecode(httpResponse.body)),
