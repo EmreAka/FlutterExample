@@ -2,31 +2,31 @@ import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
 import 'package:flutter_example/shared/clients/users_http_client.dart';
 import 'package:flutter_example/shared/models/user.model.dart';
+import 'package:flutter_example/shared/stores/user_store.dart';
 
-class AuthService implements IAuthService{
+class AuthService implements IAuthService {
   final IUserHttpClient _userHttpClient;
+  final UserStore _userStore;
 
-  AuthService(this._userHttpClient);
+  AuthService({
+    required IUserHttpClient userHttpClient,
+    required UserStore userStore,
+  })  : _userHttpClient = userHttpClient,
+        _userStore = userStore;
 
   @override
   Future<Result<UserModel, Exception>> login(String email, String password) async {
-    final users = await _userHttpClient.getUsers();
+    final users = await _userHttpClient.getUser(email);
 
-    if (users is Success) {
-      final user = _findUserByEmail((users as Success<List<UserModel>, Exception>).value, email);
-
-      return user;
-    }
-
-    return Failure((users as Failure).exception);
-  }
-
-  Result<UserModel, Exception> _findUserByEmail(List<UserModel> users, String email) {
-    try {
-      final user = users.firstWhere((user) => user.email == email);
-      return Success(user);
-    } catch (e) {
-      return Failure(Exception('Credentials are wrong'));
+    switch (users) {
+      case Success(value: final users):
+        if (users.isNotEmpty) {
+          _userStore.signIn(users.first);
+          return Success(users.first);
+        }
+        return Failure(Exception('User not found'));
+      case Failure(exception: final exception):
+        return Failure(exception);
     }
   }
 }

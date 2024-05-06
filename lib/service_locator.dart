@@ -14,6 +14,7 @@ import 'package:flutter_example/modules/home/services/home_service.dart';
 import 'package:flutter_example/shared/clients/users_http_client.dart';
 import 'package:flutter_example/shared/repositories/post_repository_async.dart';
 import 'package:flutter_example/shared/clients/post_http_client.dart';
+import 'package:flutter_example/shared/stores/user_store.dart';
 import 'package:get_it/get_it.dart';
 
 class DependencyInjection {
@@ -64,7 +65,8 @@ class DependencyInjection {
 
     _serviceLocator.registerFactory<IAuthService>(
       () => AuthService(
-        _serviceLocator.get<IUserHttpClient>(),
+        userHttpClient: _serviceLocator.get<IUserHttpClient>(),
+        userStore: _serviceLocator.get(),
       ),
     );
 
@@ -74,6 +76,8 @@ class DependencyInjection {
         _serviceLocator.get<IPostHttpClient>(),
       ),
     );
+
+    _serviceLocator.registerSingleton(UserStore());
 
     await _serviceLocator.allReady();
     return _serviceLocator;

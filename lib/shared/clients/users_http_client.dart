@@ -6,6 +6,7 @@ import 'package:flutter_example/shared/models/user.model.dart';
 
 abstract class IUserHttpClient {
   Future<Result<List<UserModel>, Exception>> getUsers();
+  Future<Result<List<UserModel>, Exception>> getUser(String email);
 }
 
 class UserHttpClient implements IUserHttpClient {
@@ -22,4 +23,16 @@ class UserHttpClient implements IUserHttpClient {
 
     return posts;
   }
+  
+  @override
+  Future<Result<List<UserModel>, Exception>> getUser(String email) async {
+    final result = await _networkManager.get('/users?email=$email');
+
+    final Result<List<UserModel>, Exception> posts = ResultConverter.toResult(
+        result, (value) => JsonParser.parseList(UserModel.fromJson, value));
+
+    return posts;
+  }
+
+
 }

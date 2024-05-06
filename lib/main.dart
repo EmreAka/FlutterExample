@@ -40,7 +40,10 @@ class MyApp extends StatelessWidget {
             path: '/home',
             name: 'home',
             builder: (context, state) {
-              return HomeView(homeService: di.get());
+              return HomeView(
+                homeService: di.get(),
+                userStore: di.get(),
+              );
             },
           )
         ],
