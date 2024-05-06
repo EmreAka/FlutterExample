@@ -4,6 +4,8 @@ This project is a Flutter application that is built following SOLID principles, 
 
 ## Used Packages
 
-- GetIt: Managing services' lifecycles.
+- GetIt: Managing lifecycles of services.
 - GoRouter: Routing.
 - Signals: State management.
+- Hive: Database.
+- Dio & Http: Network.
