@@ -17,7 +17,7 @@ class PostHttpClient implements IPostHttpClient {
 
   @override
   Future<Result<PostModel, Exception>> getPostById(int id) async {
-    final result = await _networkManager.get('posts/$id');
+    final result = await _networkManager.get('/posts/$id');
 
     final Result<PostModel, Exception> post = ResultConverter.toResult(
         result, (value) => JsonParser.parseMap(PostModel.fromJson, value));
@@ -27,7 +27,7 @@ class PostHttpClient implements IPostHttpClient {
 
   @override
   Future<Result<List<PostModel>, Exception>> getPosts() async {
-    final result = await _networkManager.get('posts');
+    final result = await _networkManager.get('/posts');
 
     final Result<List<PostModel>, Exception> posts = ResultConverter.toResult(
         result, (value) => JsonParser.parseList(PostModel.fromJson, value));
@@ -37,7 +37,7 @@ class PostHttpClient implements IPostHttpClient {
 
   @override
   Future<Result<PostModel, Exception>> createPost(PostModel post) async {
-    final result = await _networkManager.post('posts', data: post);
+    final result = await _networkManager.post('/posts', data: post);
 
     final Result<PostModel, Exception> createdPost = ResultConverter.toResult(
         result, (value) => JsonParser.parseMap(PostModel.fromJson, value));

@@ -6,18 +6,15 @@ import 'package:flutter_example/core/models/model_interface.dart';
 import 'package:flutter_example/core/models/network/http_result_model.dart';
 
 class DioNetworkManager implements INetworkManager {
-  late final Dio _dio;
+  final Dio _dio;
 
-  DioNetworkManager(String baseUrl) {
-    _dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      validateStatus: (status) => true,
-    ));
-  }
-
-  DioNetworkManager.withToken(String baseUrl, String bearerToken) {
-    _dio = Dio(BaseOptions(baseUrl: baseUrl));
-  }
+  DioNetworkManager({String? baseUrl})
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: baseUrl ?? '',
+            validateStatus: (status) => true,
+          ),
+        );
 
   @override
   void addBearerToken(String bearerToken) {

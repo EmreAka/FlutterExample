@@ -7,14 +7,13 @@ import 'package:flutter_example/core/models/network/http_result_model.dart';
 import 'package:http/http.dart' as http;
 
 class HttpNetworkManager implements INetworkManager {
-  late final String _baseUrl;
-  late final http.Client _httpClient;
+  final http.Client _httpClient;
+  final String? _baseUrl;
   final String bearerToken = '';
 
-  HttpNetworkManager(String baseUrl) {
-    _baseUrl = baseUrl;
-    _httpClient = http.Client();
-  }
+  HttpNetworkManager({String? baseUrl})
+      : _baseUrl = baseUrl,
+        _httpClient = http.Client();
 
   @override
   void addBearerToken(String bearerToken) {
@@ -22,11 +21,14 @@ class HttpNetworkManager implements INetworkManager {
   }
 
   @override
-  Future<HttpResult<dynamic, HttpException>> delete(String path,
-      {IModel? data, Map<String, dynamic>? queryParameters}) async {
+  Future<HttpResult<dynamic, HttpException>> delete(
+    String path, {
+    IModel? data,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
       final httpResponse = await _httpClient.delete(
-        Uri.parse("$_baseUrl/$path"),
+        _getUri(path),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $bearerToken'},
         body: jsonEncode(
           data?.toJson(),
@@ -44,7 +46,7 @@ class HttpNetworkManager implements INetworkManager {
   Future<HttpResult<dynamic, HttpException>> get(String path, {Map<String, dynamic>? queryParameters}) async {
     try {
       final httpResponse = await _httpClient.get(
-        Uri.parse("$_baseUrl/$path"),
+        _getUri(path),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $bearerToken'},
       );
 
@@ -60,7 +62,7 @@ class HttpNetworkManager implements INetworkManager {
       {IModel? data, Map<String, dynamic>? queryParameters}) async {
     try {
       final httpResponse = await _httpClient.patch(
-        Uri.parse("$_baseUrl/$path"),
+        _getUri(path),
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
           HttpHeaders.contentTypeHeader: 'application/json'
@@ -82,7 +84,7 @@ class HttpNetworkManager implements INetworkManager {
       {IModel? data, Map<String, dynamic>? queryParameters}) async {
     try {
       final httpResponse = await _httpClient.post(
-        Uri.parse("$_baseUrl/$path"),
+        _getUri(path),
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
           HttpHeaders.contentTypeHeader: 'application/json'
@@ -104,7 +106,7 @@ class HttpNetworkManager implements INetworkManager {
       {IModel? data, Map<String, dynamic>? queryParameters}) async {
     try {
       final httpResponse = await _httpClient.put(
-        Uri.parse("$_baseUrl/$path"),
+        _getUri(path),
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
           HttpHeaders.contentTypeHeader: 'application/json'
@@ -137,4 +139,6 @@ class HttpNetworkManager implements INetworkManager {
 
     return result;
   }
+
+  Uri _getUri(String path) => _baseUrl != null ? Uri.parse("$_baseUrl$path") : Uri.parse(path);
 }

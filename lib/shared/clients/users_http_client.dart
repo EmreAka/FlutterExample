@@ -15,7 +15,7 @@ class UserHttpClient implements IUserHttpClient {
   
   @override
   Future<Result<List<UserModel>, Exception>> getUsers() async {
-    final result = await _networkManager.get('users');
+    final result = await _networkManager.get('/users');
 
     final Result<List<UserModel>, Exception> posts = ResultConverter.toResult(
         result, (value) => JsonParser.parseList(UserModel.fromJson, value));
