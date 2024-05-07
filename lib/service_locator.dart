@@ -1,9 +1,11 @@
 import 'package:flutter_example/core/constants/network_constants.dart';
 import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
 import 'package:flutter_example/core/interfaces/cache_repository_async_interface.dart';
+import 'package:flutter_example/core/interfaces/download_file_manager_interface.dart';
 import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
 import 'package:flutter_example/core/services/cache/cache_manager.dart';
 import 'package:flutter_example/core/services/cache/cache_repository_async.dart';
+import 'package:flutter_example/core/services/file/download_file_manager.dart';
 import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/core/services/network/http_network_manager.dart';
 import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
@@ -28,6 +30,8 @@ class DependencyInjection {
     /* _serviceLocator.registerSingleton<INetworkManager>(
       DioNetworkManager(baseUrl: NetworkConstants.jsonPlaceholderBaseUrl),
     ); */
+
+    _serviceLocator.registerFactory<IDownloadFileManager>(() => DownloadFileManager());
 
     _serviceLocator.registerSingletonAsync<ICacheRepositoryAsync>(() async {
       final cacheDatabaseManager = CacheRepositoryAsync();
@@ -74,6 +78,7 @@ class DependencyInjection {
       () => HomeService(
         _serviceLocator.get<ICacheManager>(),
         _serviceLocator.get<IPostHttpClient>(),
+        _serviceLocator.get<IDownloadFileManager>(),
       ),
     );
 

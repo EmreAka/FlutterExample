@@ -1,14 +1,11 @@
 import 'dart:developer';
 
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/modules/home/models/post/post_model.dart';
 import 'package:flutter_example/modules/home/state/home_state.dart';
 import 'package:flutter_example/modules/home/view/home_view.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 
 mixin HomeMixin on State<HomeView> {
   void showLoadingDialog();
@@ -95,24 +92,6 @@ mixin HomeMixin on State<HomeView> {
   }
 
   Future<void> downloadFile() async {
-    try {
-      var permissionStatus = await Permission.notification.request();
-      if (permissionStatus != PermissionStatus.granted) {
-        permissionStatus = await Permission.notification.request();
-      }
-      
-      final directory = await getDownloadsDirectory();
-      final taskId = await FlutterDownloader.enqueue(
-        url:
-            'https://emreaka.net/assets/my-dotnet-bot-mod.png',
-        savedDir: directory!.path,
-        showNotification: true, // show download progress in status bar (for Android)
-        openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-        saveInPublicStorage: true,
-      );
-      log(taskId ?? '');
-    } catch (e) {
-      log(e.toString());
-    }
+    await widget.homeService.downloadFile();
   }
 }

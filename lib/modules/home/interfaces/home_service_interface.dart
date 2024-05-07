@@ -5,4 +5,5 @@ abstract class IHomeService {
   Future<Result<PostModel, Exception>> getPostById(int id);
   Future<Result<List<PostModel>, Exception>> getPosts();
   Future<Result<PostModel, Exception>> createPost(PostModel post);
+  Future<Result<bool, Exception>> downloadFile();
 }
