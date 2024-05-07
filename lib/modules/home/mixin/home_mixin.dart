@@ -94,19 +94,18 @@ mixin HomeMixin on State<HomeView> {
     closeLoadingDialog();
   }
 
-  Future<void> downloadCatPicture() async {
+  Future<void> downloadFile() async {
     try {
       var permissionStatus = await Permission.notification.request();
       if (permissionStatus != PermissionStatus.granted) {
         permissionStatus = await Permission.notification.request();
       }
       
-      //final directory = await getApplicationDocumentsDirectory();
       final directory = await getDownloadsDirectory();
       final taskId = await FlutterDownloader.enqueue(
         url:
-            'https://downloadscdn6.freepik.com/23/2150783/2150782415.jpg?filename=close-up-adorable-kitten-indoors.jpg&token=exp=1715109866~hmac=7d8e78a8f2898e193c0dae418c3ed91d',
-        savedDir: directory!.absolute.path,
+            'https://emreaka.net/assets/my-dotnet-bot-mod.png',
+        savedDir: directory!.path,
         showNotification: true, // show download progress in status bar (for Android)
         openFileFromNotification: true, // click on notification to open downloaded file (for Android)
         saveInPublicStorage: true,

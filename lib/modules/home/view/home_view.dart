@@ -41,7 +41,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await createPost();
-          await downloadCatPicture();
+          await downloadFile();
         },
         child: const Icon(Icons.add),
       ),
