@@ -5,8 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await FlutterDownloader.initialize(
+    debug: true,
+  );
+
   await Hive.initFlutter();
   final di = await DependencyInjection.registerServices();
 

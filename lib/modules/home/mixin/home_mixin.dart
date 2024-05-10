@@ -28,23 +28,23 @@ mixin HomeMixin on State<HomeView> {
 
   EffectCleanup registerPostsEffect() {
     return effect(
-    () {
-      switch (posts.value) {
-        case LoadingState():
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-            showLoadingDialog();
-            isDialogOpen = true;
-          });
-          break;
-        default:
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-            closeLoadingDialog();
-            isDialogOpen = false;
-          });
-          break;
-      }
-    },
-  );
+      () {
+        switch (posts.value) {
+          case LoadingState():
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+              showLoadingDialog();
+              isDialogOpen = true;
+            });
+            break;
+          default:
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+              closeLoadingDialog();
+              isDialogOpen = false;
+            });
+            break;
+        }
+      },
+    );
   }
 
   @override
@@ -89,5 +89,9 @@ mixin HomeMixin on State<HomeView> {
     }
 
     closeLoadingDialog();
+  }
+
+  Future<void> downloadFile() async {
+    await widget.homeService.downloadFile();
   }
 }
