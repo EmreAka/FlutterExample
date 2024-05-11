@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:android_path_provider/android_path_provider.dart';
 import 'package:flutter_example/core/constants/network_constants.dart';
 import 'package:flutter_example/core/interfaces/download_file_manager_interface.dart';
 import 'package:flutter_example/core/models/result_model.dart';
@@ -11,11 +14,13 @@ final class DownloadFileManager implements IDownloadFileManager {
     try {
       await PermissionService.requestNotificationPermission();
 
-      final directory = await getDownloadsDirectory();
+      final directory = Platform.isAndroid
+          ? await AndroidPathProvider.downloadsPath
+          : (await getDownloadsDirectory())?.path ?? '';
 
       await FlutterDownloader.enqueue(
         url: NetworkConstants.dotnetBotImageUrl,
-        savedDir: directory!.path,
+        savedDir: directory,
         showNotification: true,
         openFileFromNotification: true,
         saveInPublicStorage: true,
