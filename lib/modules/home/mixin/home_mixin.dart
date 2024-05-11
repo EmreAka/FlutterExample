@@ -82,6 +82,10 @@ mixin HomeMixin on State<HomeView> {
         log(value.id.toString());
         log(value.title);
         log(value.body);
+        if (posts.value is SuccessState) {
+          posts.value = SuccessState([...(posts.value as SuccessState).value, value]);
+          break;
+        }
         break;
       case Failure(exception: final exception):
         log('Error: $exception');
