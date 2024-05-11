@@ -16,7 +16,7 @@ final class DownloadFileManager implements IDownloadFileManager {
 
       final directory = Platform.isAndroid
           ? await AndroidPathProvider.downloadsPath
-          : (await getDownloadsDirectory())?.path ?? '';
+          : (await getApplicationDocumentsDirectory()).path;
 
       await FlutterDownloader.enqueue(
         url: NetworkConstants.dotnetBotImageUrl,
