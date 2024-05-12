@@ -94,8 +94,4 @@ mixin HomeMixin on State<HomeView> {
 
     closeLoadingDialog();
   }
-
-  Future<void> downloadFile() async {
-    await widget.homeService.downloadFile();
-  }
 }

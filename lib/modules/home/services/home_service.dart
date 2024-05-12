@@ -10,12 +10,10 @@ import 'package:flutter_example/shared/clients/post_http_client.dart';
 class HomeService implements IHomeService {
   final ICacheManager _cacheManager;
   final IPostHttpClient _postHttpClient;
-  final IDownloadFileManager _downloadFileManager;
 
   HomeService(
     this._cacheManager,
     this._postHttpClient,
-    this._downloadFileManager,
   );
 
   @override
@@ -47,11 +45,5 @@ class HomeService implements IHomeService {
   Future<Result<PostModel, Exception>> createPost(PostModel post) async {
     final createdPost = await _postHttpClient.createPost(post);
     return createdPost;
-  }
-
-  @override
-  Future<Result<bool, Exception>> downloadFile() async {
-    final downloadResult = await _downloadFileManager.downloadFile();
-    return downloadResult;
   }
 }
