@@ -41,13 +41,15 @@ final class DownloadFileManager implements IDownloadFileManager {
 
       await Isolate.spawn(_downloadViaHttp, (fileUrl, fileName, directory, progressReadPort.sendPort));
 
-      await for (final (String fileName, int percentage)? message in progressReadPort) {
+      await for (final (String fileName, String filePath, int percentage)? message in progressReadPort) {
         if (message == null) break;
 
         final fileName = message.$1;
-        final progress = message.$2;
+        final filePath = message.$2;
+        final progress = message.$3;
 
         _fileStore.updateProgress(fileId, progress);
+        _fileStore.updatePath(fileId, filePath);
 
         log('Downloading $fileName - $progress%');
       }
@@ -104,7 +106,7 @@ final class DownloadFileManager implements IDownloadFileManager {
 
       if (lastProgress != progress) {
         lastProgress = progress;
-        sendProgressPort.send((fileName, progress));
+        sendProgressPort.send((fileName, filePath, progress));
       }
 
       await raf.writeFrom(chunk);

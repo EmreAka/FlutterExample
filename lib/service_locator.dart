@@ -3,9 +3,11 @@ import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
 import 'package:flutter_example/core/interfaces/cache_repository_async_interface.dart';
 import 'package:flutter_example/core/interfaces/download_file_manager_interface.dart';
 import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
+import 'package:flutter_example/core/interfaces/open_file_manager_interface.dart';
 import 'package:flutter_example/core/services/cache/cache_manager.dart';
 import 'package:flutter_example/core/services/cache/cache_repository_async.dart';
 import 'package:flutter_example/core/services/file/download_file_manager.dart';
+import 'package:flutter_example/core/services/file/open_file_manager.dart';
 //import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/core/services/network/http_network_manager.dart';
 import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
@@ -91,11 +93,14 @@ class DependencyInjection {
     _serviceLocator.registerFactory<IFileService>(
       () => FileService(
         downloadFileManager: _serviceLocator.get<IDownloadFileManager>(),
+        openFileManager: _serviceLocator.get<IOpenFileManager>(),
       ),
     );
 
     _serviceLocator.registerSingleton(UserStore());
     _serviceLocator.registerSingleton(FileStore());
+
+    _serviceLocator.registerFactory<IOpenFileManager>(() => OpenFileXManager());
 
     await _serviceLocator.allReady();
     return _serviceLocator;
