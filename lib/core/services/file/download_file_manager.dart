@@ -4,12 +4,37 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:android_path_provider/android_path_provider.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_example/core/interfaces/download_file_manager_interface.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/core/services/permission/permission_service.dart';
 import 'package:flutter_example/shared/stores/file_store.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+
+final class FlutterDownloaderDownloadFileManager implements IDownloadFileManager {
+  @override
+  Future<Result<bool, Exception>> downloadFile(String fileUrl, String fileName) async {
+    try {
+      final directory = Platform.isAndroid
+          ? await AndroidPathProvider.downloadsPath
+          : (await getApplicationDocumentsDirectory()).path;
+
+      await FlutterDownloader.enqueue(
+        saveInPublicStorage: true,
+        url: fileUrl,
+        savedDir: directory,
+        fileName: fileName,
+        showNotification: true,
+        openFileFromNotification: true,
+      );
+
+      return const Success(true);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
+}
 
 final class DownloadFileManager implements IDownloadFileManager {
   final FileStore _fileStore;
@@ -74,7 +99,6 @@ final class DownloadFileManager implements IDownloadFileManager {
     final directory = args.$3;
     final sendProgressPort = args.$4;
 
-
     HttpClient client = HttpClient();
 
     HttpClientRequest request = await client.getUrl(Uri.parse(fileUrl));
@@ -101,7 +125,7 @@ final class DownloadFileManager implements IDownloadFileManager {
     int lastProgress = 0;
     await for (var chunk in response) {
       readBytes += chunk.length;
-      
+
       final progress = (readBytes / response.contentLength * 100).toInt();
 
       if (lastProgress != progress) {

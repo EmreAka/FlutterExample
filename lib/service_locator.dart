@@ -42,6 +42,10 @@ class DependencyInjection {
       ),
     );
 
+    /* _serviceLocator.registerFactory<IDownloadFileManager>(
+      () => FlutterDownloaderDownloadFileManager(),
+    ); */
+    
     _serviceLocator.registerSingletonAsync<ICacheRepositoryAsync>(() async {
       final cacheDatabaseManager = CacheRepositoryAsync();
       await cacheDatabaseManager.init();

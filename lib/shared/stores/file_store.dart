@@ -105,4 +105,9 @@ final class FileStore {
       return false;
     }
   }
+
+  bool exists(String id) {
+    final currentQueue = _fileDownloadQueue.value;
+    return currentQueue.any((element) => element.id == id);
+  }
 }
