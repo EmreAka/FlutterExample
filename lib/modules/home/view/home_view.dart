@@ -50,18 +50,18 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
           onRefresh: getPost,
           child: switch (posts.value) {
             SuccessState(value: final posts) => ListView.separated(
-              padding: const EdgeInsets.all(24),
-              itemBuilder: (context, index) => Card(
-                child: ListTile(
-                  title: Text(posts[index].title),
-                  subtitle: Text(posts[index].body),
+                padding: const EdgeInsets.all(24),
+                itemBuilder: (context, index) => Card(
+                  child: ListTile(
+                    title: Text(posts[index].title),
+                    subtitle: Text(posts[index].body),
+                  ),
                 ),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
+                ),
+                itemCount: posts.length,
               ),
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 10,
-              ),
-              itemCount: posts.length,
-            ),
             ErrorState() => const Center(
                 child: Text('Posts could not be loaded. Please try again later.'),
               ),

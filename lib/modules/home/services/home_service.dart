@@ -50,8 +50,8 @@ class HomeService implements IHomeService {
   }
 
   @override
-  Future<Result<bool, Exception>> downloadFile() async {
-    final downloadResult = await _downloadFileManager.downloadFile();
+  Future<Result<bool, Exception>> downloadFile(String fileUrl, String fileName) async {
+    final downloadResult = await _downloadFileManager.downloadFile(fileUrl, fileName);
     return downloadResult;
   }
 }
