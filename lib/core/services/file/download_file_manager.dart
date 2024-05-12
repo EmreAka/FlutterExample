@@ -8,7 +8,6 @@ import 'package:flutter_example/core/interfaces/download_file_manager_interface.
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/core/services/permission/permission_service.dart';
 import 'package:path_provider/path_provider.dart';
-//import 'package:flutter_downloader/flutter_downloader.dart';
 
 final class DownloadFileManager implements IDownloadFileManager {
   @override
@@ -24,7 +23,9 @@ final class DownloadFileManager implements IDownloadFileManager {
 
       await Isolate.spawn(_downloadViaHttp, (fileUrl, fileName, directory, progressReadPort.sendPort));
 
-      await for (final (String fileName, int percentage) message in progressReadPort) {
+      await for (final (String fileName, int percentage)? message in progressReadPort) {
+        if (message == null) break;
+
         final fileName = message.$1;
         final progress = message.$2;
 
@@ -86,14 +87,7 @@ final class DownloadFileManager implements IDownloadFileManager {
 
     log('Total Size Downloaded: $readBytes');
 
-    /* await FlutterDownloader.enqueue(
-      url: NetworkConstants.dotnetBotImageUrl,
-      savedDir: directory,
-      showNotification: true,
-      openFileFromNotification: true,
-      saveInPublicStorage: true,
-    ); */
-
     client.close();
+    sendProgressPort.send(null);
   }
 }
