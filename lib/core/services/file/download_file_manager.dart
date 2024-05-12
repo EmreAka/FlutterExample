@@ -20,20 +20,18 @@ final class DownloadFileManager implements IDownloadFileManager {
           ? await AndroidPathProvider.downloadsPath
           : (await getApplicationDocumentsDirectory()).path;
 
-      final readPort = ReceivePort();
+      final progressReadPort = ReceivePort();
 
-      await Isolate.spawn(_downloadViaHttp, (fileUrl, fileName, directory, readPort.sendPort));
+      await Isolate.spawn(_downloadViaHttp, (fileUrl, fileName, directory, progressReadPort.sendPort));
 
-      await for (var message in readPort) {
-        log('Downloading ${message.$1} - ${message.$2}%');
-        final directory = Platform.isAndroid
-          ? await AndroidPathProvider.downloadsPath
-          : (await getApplicationDocumentsDirectory()).path;
-        
-        log(directory);
+      await for (final (String fileName, int percentage) message in progressReadPort) {
+        final fileName = message.$1;
+        final progress = message.$2;
+
+        log('Downloading $fileName - $progress%');
       }
 
-      readPort.close();
+      progressReadPort.close();
       return const Success(true);
     } catch (e) {
       return Failure(Exception(e.toString()));
@@ -41,18 +39,30 @@ final class DownloadFileManager implements IDownloadFileManager {
   }
 
   Future<void> _downloadViaHttp(
-      (String fileUrl, String fileName, String directory, SendPort sendPort) args) async {
+    (
+      String fileUrl,
+      String fileName,
+      String directory,
+      SendPort sendProgressPort,
+    ) args,
+  ) async {
+    final fileUrl = args.$1;
+    final fileName = args.$2;
+    final directory = args.$3;
+    final sendProgressPort = args.$4;
+
+
     HttpClient client = HttpClient();
 
-    HttpClientRequest request = await client.getUrl(Uri.parse(args.$1));
+    HttpClientRequest request = await client.getUrl(Uri.parse(fileUrl));
     HttpClientResponse response = await request.close();
 
     log('Content Length: ${response.contentLength}');
 
-    final uri = Uri.parse(args.$1);
+    final uri = Uri.parse(fileUrl);
     final fileExtension = uri.pathSegments.last.split('.').last;
 
-    final filePath = "${args.$3}/${args.$2}.$fileExtension";
+    final filePath = "$directory/$fileName.$fileExtension";
     File savedFile = File(filePath);
 
     final raf = savedFile.openSync(mode: FileMode.write);
@@ -64,9 +74,9 @@ final class DownloadFileManager implements IDownloadFileManager {
 
       readBytes += chunk.length;
 
-      if (lastProgress != progress && progress % 10 == 0) {
+      if (lastProgress != progress) {
         lastProgress = progress;
-        args.$4.send((args.$2, progress));
+        sendProgressPort.send((fileName, progress));
       }
 
       await raf.writeFrom(chunk);
