@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
-import 'package:flutter_example/core/interfaces/download_file_manager_interface.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/models/post/post_model.dart';
