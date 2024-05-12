@@ -6,16 +6,19 @@ import 'package:flutter_example/core/interfaces/network_manager_interface.dart';
 import 'package:flutter_example/core/services/cache/cache_manager.dart';
 import 'package:flutter_example/core/services/cache/cache_repository_async.dart';
 import 'package:flutter_example/core/services/file/download_file_manager.dart';
-import 'package:flutter_example/core/services/network/dio_network_manager.dart';
+//import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/core/services/network/http_network_manager.dart';
 import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
 import 'package:flutter_example/modules/auth/services/auth_service.dart';
+import 'package:flutter_example/modules/file/interfaces/file_service_interface.dart';
+import 'package:flutter_example/modules/file/service/file_service.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
 import 'package:flutter_example/modules/home/interfaces/post_repository_async_interface.dart';
 import 'package:flutter_example/modules/home/services/home_service.dart';
 import 'package:flutter_example/shared/clients/users_http_client.dart';
 import 'package:flutter_example/shared/repositories/post_repository_async.dart';
 import 'package:flutter_example/shared/clients/post_http_client.dart';
+import 'package:flutter_example/shared/stores/file_store.dart';
 import 'package:flutter_example/shared/stores/user_store.dart';
 import 'package:get_it/get_it.dart';
 
@@ -31,7 +34,11 @@ class DependencyInjection {
       DioNetworkManager(baseUrl: NetworkConstants.jsonPlaceholderBaseUrl),
     ); */
 
-    _serviceLocator.registerFactory<IDownloadFileManager>(() => DownloadFileManager());
+    _serviceLocator.registerFactory<IDownloadFileManager>(
+      () => DownloadFileManager(
+        fileStore: _serviceLocator.get<FileStore>(),
+      ),
+    );
 
     _serviceLocator.registerSingletonAsync<ICacheRepositoryAsync>(() async {
       final cacheDatabaseManager = CacheRepositoryAsync();
@@ -78,11 +85,17 @@ class DependencyInjection {
       () => HomeService(
         _serviceLocator.get<ICacheManager>(),
         _serviceLocator.get<IPostHttpClient>(),
-        _serviceLocator.get<IDownloadFileManager>(),
+      ),
+    );
+
+    _serviceLocator.registerFactory<IFileService>(
+      () => FileService(
+        downloadFileManager: _serviceLocator.get<IDownloadFileManager>(),
       ),
     );
 
     _serviceLocator.registerSingleton(UserStore());
+    _serviceLocator.registerSingleton(FileStore());
 
     await _serviceLocator.allReady();
     return _serviceLocator;

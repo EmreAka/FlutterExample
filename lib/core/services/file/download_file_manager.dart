@@ -7,12 +7,30 @@ import 'package:android_path_provider/android_path_provider.dart';
 import 'package:flutter_example/core/interfaces/download_file_manager_interface.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/core/services/permission/permission_service.dart';
+import 'package:flutter_example/shared/stores/file_store.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 final class DownloadFileManager implements IDownloadFileManager {
+  final FileStore _fileStore;
+
+  DownloadFileManager({
+    required FileStore fileStore,
+  }) : _fileStore = fileStore;
+
   @override
   Future<Result<bool, Exception>> downloadFile(String fileUrl, String fileName) async {
+    final fileId = const Uuid().v4();
     try {
+      final addFileToDownloadQueueResult = _fileStore.addFileToDownloadQueue(
+        FileStoreModel(
+          id: fileId,
+          fileName: fileName,
+          progress: 0,
+        ),
+      );
+      if (!addFileToDownloadQueueResult) return Failure(Exception('Max concurrent downloads reached'));
+
       await PermissionService.requestNotificationPermission();
 
       final directory = Platform.isAndroid
@@ -29,6 +47,8 @@ final class DownloadFileManager implements IDownloadFileManager {
         final fileName = message.$1;
         final progress = message.$2;
 
+        _fileStore.updateProgress(fileId, progress);
+
         log('Downloading $fileName - $progress%');
       }
 
@@ -39,7 +59,7 @@ final class DownloadFileManager implements IDownloadFileManager {
     }
   }
 
-  Future<void> _downloadViaHttp(
+  static Future<void> _downloadViaHttp(
     (
       String fileUrl,
       String fileName,
@@ -63,17 +83,24 @@ final class DownloadFileManager implements IDownloadFileManager {
     final uri = Uri.parse(fileUrl);
     final fileExtension = uri.pathSegments.last.split('.').last;
 
-    final filePath = "$directory/$fileName.$fileExtension";
-    File savedFile = File(filePath);
+    var filePath = "$directory/$fileName.$fileExtension";
+
+    int version = 1;
+    while (await File(filePath).exists()) {
+      filePath = "$directory/$fileName($version).$fileExtension";
+      version++;
+    }
+
+    final savedFile = File(filePath);
 
     final raf = savedFile.openSync(mode: FileMode.write);
 
     int readBytes = 0;
     int lastProgress = 0;
     await for (var chunk in response) {
-      final progress = (readBytes / response.contentLength * 100).toInt();
-
       readBytes += chunk.length;
+      
+      final progress = (readBytes / response.contentLength * 100).toInt();
 
       if (lastProgress != progress) {
         lastProgress = progress;
@@ -88,6 +115,7 @@ final class DownloadFileManager implements IDownloadFileManager {
     log('Total Size Downloaded: $readBytes');
 
     client.close();
+
     sendProgressPort.send(null);
   }
 }

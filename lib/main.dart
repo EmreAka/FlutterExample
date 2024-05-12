@@ -1,4 +1,5 @@
 import 'package:flutter_example/modules/auth/views/login_view.dart';
+import 'package:flutter_example/modules/file/view/file_view.dart';
 import 'package:flutter_example/modules/home/view/home_view.dart';
 import 'package:flutter_example/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,18 @@ class MyApp extends StatelessWidget {
                 userStore: di.get(),
               );
             },
-          )
+          ),
+          GoRoute(
+            path: '/file',
+            name: 'file',
+            builder: (context, state) {
+              return FileView(
+                fileService: di.get(),
+                fileStore: di.get(),
+              );
+            },
+          ),
+
         ],
       ),
     );

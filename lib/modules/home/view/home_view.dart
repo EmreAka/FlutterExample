@@ -3,6 +3,7 @@ import 'package:flutter_example/modules/home/mixin/home_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_example/modules/home/state/home_state.dart';
 import 'package:flutter_example/shared/stores/user_store.dart';
+import 'package:go_router/go_router.dart';
 import 'package:signals/signals_flutter.dart';
 
 class HomeView extends StatefulWidget {
@@ -36,12 +37,17 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
             },
             icon: const Icon(Icons.logout),
           ),
+          IconButton(
+            onPressed: () {
+              context.pushNamed('file');
+            },
+            icon: const Icon(Icons.file_download),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await createPost();
-          await downloadFile();
         },
         child: const Icon(Icons.add),
       ),

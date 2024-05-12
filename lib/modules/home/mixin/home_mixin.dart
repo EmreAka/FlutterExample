@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_example/core/constants/network_constants.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/modules/home/models/post/post_model.dart';
 import 'package:flutter_example/modules/home/state/home_state.dart';
@@ -94,14 +93,5 @@ mixin HomeMixin on State<HomeView> {
     }
 
     closeLoadingDialog();
-  }
-
-  Future<void> downloadFile() async {
-    final tasks = [
-      widget.homeService.downloadFile(NetworkConstants.imageUrl, 'smallImage'),
-      widget.homeService.downloadFile(NetworkConstants.largeImageUrl, 'largeImage'),
-    ];
-
-    await Future.wait(tasks);
   }
 }
