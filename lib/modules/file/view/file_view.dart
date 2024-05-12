@@ -54,24 +54,14 @@ class _FileViewState extends State<FileView> with FileViewMixin {
       appBar: AppBar(
         title: const Text('File'),
       ),
-      body: Watch(
-        (_) => ListView(
-          padding: const EdgeInsets.all(8.0),
-          children: [
-            ExampleButton(onPressed: downloadFile, text: 'Download Files Concurrently'),
-            ExampleButton(onPressed: downloadFileSmall, text: 'Download Small File'),
-            ExampleButton(onPressed: downloadFileLarge, text: 'Download Large File'),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: widget.fileStore.fileDownloadQueue.value.length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(widget.fileStore.fileDownloadQueue.value[index].fileName),
-                trailing: Text('${widget.fileStore.fileDownloadQueue.value[index].progress}%'),
-              ),
-            )
-          ],
-        ),
+      body: ListView(
+        padding: const EdgeInsets.all(8.0),
+        children: [
+          ExampleButton(onPressed: downloadFile, text: 'Download Files Concurrently'),
+          ExampleButton(onPressed: downloadFileSmall, text: 'Download Small File'),
+          ExampleButton(onPressed: downloadFileLarge, text: 'Download Large File'),
+          DownloadsListWidget(fileStore: widget.fileStore),
+        ],
       ),
     );
   }
@@ -81,6 +71,35 @@ class _FileViewState extends State<FileView> with FileViewMixin {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Max downloads reached. Please wait for some downloads to complete.'),
+      ),
+    );
+  }
+}
+
+class DownloadsListWidget extends StatelessWidget {
+  final FileStore fileStore;
+
+  const DownloadsListWidget({
+    super.key,
+    required this.fileStore,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Watch(
+      (context) => ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: fileStore.fileDownloadQueue.value.length,
+        itemBuilder: (context, index) {
+          final fileName = fileStore.fileDownloadQueue.value[index].fileName;
+          final progress = fileStore.fileDownloadQueue.value[index].progress;
+
+          return ListTile(
+            title: Text(fileName),
+            trailing: progress < 100 ? Text('$progress%') : const Icon(Icons.download_done),
+          );
+        },
       ),
     );
   }
