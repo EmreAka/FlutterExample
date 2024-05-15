@@ -2,18 +2,16 @@ import 'package:flutter_example/modules/home/interfaces/home_service_interface.d
 import 'package:flutter_example/modules/home/mixin/home_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_example/modules/home/state/home_state.dart';
-import 'package:flutter_example/shared/stores/user_store.dart';
+import 'package:flutter_example/shared/providers/store_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals/signals_flutter.dart';
 
 class HomeView extends StatefulWidget {
   final IHomeService homeService;
-  final UserStore userStore;
 
   const HomeView({
     super.key,
     required this.homeService,
-    required this.userStore,
   });
 
   @override
@@ -27,13 +25,13 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       appBar: AppBar(
         title: Watch(
           (context) => Text(
-            widget.userStore.user()?.name ?? 'Posts',
+            StoreProvider.getUserStore(context).user()?.name ?? 'Posts',
           ),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              widget.userStore.signOut();
+              StoreProvider.getUserStore(context).signOut();
             },
             icon: const Icon(Icons.logout),
           ),

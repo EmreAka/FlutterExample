@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_example/modules/file/interfaces/file_service_interface.dart';
 import 'package:flutter_example/modules/file/mixin/file_mixin.dart';
+import 'package:flutter_example/shared/providers/store_provider.dart';
 import 'package:flutter_example/shared/stores/file_store.dart';
 import 'package:flutter_example/shared/widgets/example_button.dart';
 import 'package:signals/signals_flutter.dart';
 
 class FileView extends StatefulWidget {
   final IFileService fileService;
-  final FileStore fileStore;
 
-  const FileView({super.key, required this.fileService, required this.fileStore});
+  const FileView({
+    super.key,
+    required this.fileService,
+  });
 
   @override
   State<FileView> createState() => _FileViewState();
@@ -28,7 +31,10 @@ class _FileViewState extends State<FileView> with FileMixin {
           ExampleButton(onPressed: downloadFile, text: 'Download Files Concurrently'),
           ExampleButton(onPressed: downloadFileSmall, text: 'Download Small File'),
           ExampleButton(onPressed: downloadFileLarge, text: 'Download Large File'),
-          DownloadsListWidget(fileStore: widget.fileStore, onItemTapped: openFile),
+          DownloadsListWidget(
+            fileStore: StoreProvider.getFileStore(context),
+            onItemTapped: openFile,
+          ),
         ],
       ),
     );
