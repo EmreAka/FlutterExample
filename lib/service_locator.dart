@@ -11,11 +11,11 @@ import 'package:flutter_example/core/services/file/open_file_manager.dart';
 //import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/core/services/network/http_network_manager.dart';
 import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
-import 'package:flutter_example/modules/auth/services/auth_service.dart';
+import 'package:flutter_example/shared/services/auth_service.dart';
 import 'package:flutter_example/modules/file/interfaces/file_service_interface.dart';
 import 'package:flutter_example/modules/file/service/file_service.dart';
 import 'package:flutter_example/modules/home/interfaces/home_service_interface.dart';
-import 'package:flutter_example/modules/home/interfaces/post_repository_async_interface.dart';
+import 'package:flutter_example/shared/interfaces/post_repository_async_interface.dart';
 import 'package:flutter_example/modules/home/services/home_service.dart';
 import 'package:flutter_example/shared/clients/users_http_client.dart';
 import 'package:flutter_example/shared/repositories/post_repository_async.dart';
@@ -45,7 +45,7 @@ class DependencyInjection {
     /* _serviceLocator.registerFactory<IDownloadFileManager>(
       () => FlutterDownloaderDownloadFileManager(),
     ); */
-    
+
     _serviceLocator.registerSingletonAsync<ICacheRepositoryAsync>(() async {
       final cacheDatabaseManager = CacheRepositoryAsync();
       await cacheDatabaseManager.init();
@@ -83,7 +83,6 @@ class DependencyInjection {
     _serviceLocator.registerFactory<IAuthService>(
       () => AuthService(
         userHttpClient: _serviceLocator.get<IUserHttpClient>(),
-        userStore: _serviceLocator.get(),
       ),
     );
 
@@ -101,7 +100,10 @@ class DependencyInjection {
       ),
     );
 
-    _serviceLocator.registerSingleton(UserStore());
+    _serviceLocator.registerSingleton(UserStore(
+      authService: _serviceLocator.get<IAuthService>(),
+    ));
+    
     _serviceLocator.registerSingleton(FileStore());
 
     _serviceLocator.registerFactory<IOpenFileManager>(() => OpenFileXManager());

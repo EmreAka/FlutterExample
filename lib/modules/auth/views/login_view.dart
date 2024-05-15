@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
 import 'package:flutter_example/modules/auth/mixins/login_mixin.dart';
 import 'package:flutter_example/shared/widgets/example_button.dart';
 
 class LoginView extends StatefulWidget {
-  final IAuthService authService;
 
   const LoginView({
     super.key,
-    required this.authService,
   });
 
   @override
