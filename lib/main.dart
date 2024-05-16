@@ -1,3 +1,5 @@
+import 'package:flutter_example/core/theme/theme.dart';
+import 'package:flutter_example/core/theme/util.dart';
 import 'package:flutter_example/modules/auth/views/login_view.dart';
 import 'package:flutter_example/modules/file/view/file_view.dart';
 import 'package:flutter_example/modules/home/view/home_view.dart';
@@ -30,14 +32,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = createTextTheme(context, "Roboto", "Roboto");
+    MaterialTheme theme = MaterialTheme(textTheme);
+
     return StoreProvider(
       fileStore: di.get(),
       userStore: di.get(),
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Caching',
-        darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
+        theme: theme.dark(),
         routerConfig: GoRouter(
           initialLocation: '/login',
           routes: [

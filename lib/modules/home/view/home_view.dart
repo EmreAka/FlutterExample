@@ -56,6 +56,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
             SuccessState(value: final posts) => ListView.separated(
                 padding: const EdgeInsets.all(24),
                 itemBuilder: (context, index) => Card(
+                  color: Theme.of(context).colorScheme.onInverseSurface,
                   child: ListTile(
                     title: Text(posts[index].title),
                     subtitle: Text(posts[index].body),
