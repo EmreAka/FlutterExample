@@ -8,17 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 mixin HomeMixin on State<HomeView> {
-  void showLoadingDialog();
-  void closeLoadingDialog();
-
   final posts = signal<HomeState>(const IdleState());
-  late final EffectCleanup disposePostsEffect;
-  var isDialogOpen = false;
 
   @override
   void initState() {
-    disposePostsEffect = registerPostsEffect();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await getPost();
     });
@@ -26,36 +19,27 @@ mixin HomeMixin on State<HomeView> {
     super.initState();
   }
 
-  EffectCleanup registerPostsEffect() {
-    return effect(
-      () {
-        switch (posts.value) {
-          case LoadingState():
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-              showLoadingDialog();
-              isDialogOpen = true;
-            });
-            break;
-          default:
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-              closeLoadingDialog();
-              isDialogOpen = false;
-            });
-            break;
-        }
-      },
-    );
-  }
-
   @override
   void dispose() {
-    disposePostsEffect();
     posts.dispose();
     super.dispose();
   }
 
-  Future getPost() async {
+  Future<void> onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final result = await widget.homeService.getPosts();
+
+    posts.value = switch (result) {
+      Success(value: final value) => SuccessState(value),
+      Failure(exception: final _) => const ErrorState()
+    };
+  }
+
+  Future<void> getPost() async {
     posts.value = const LoadingState();
+
+    await Future.delayed(const Duration(milliseconds: 500));
 
     final result = await widget.homeService.getPosts();
 
@@ -66,9 +50,6 @@ mixin HomeMixin on State<HomeView> {
   }
 
   Future<void> createPost() async {
-    showLoadingDialog();
-    isDialogOpen = true;
-
     final post = PostModel(
       id: 5,
       title: 'Title of the post',
@@ -91,7 +72,5 @@ mixin HomeMixin on State<HomeView> {
         log('Error: $exception');
         break;
     }
-
-    closeLoadingDialog();
   }
 }

@@ -42,6 +42,17 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
             icon: const Icon(Icons.file_download),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Watch(
+            (_) => Visibility(
+              visible: posts.value is LoadingState,
+              child: LinearProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -51,7 +62,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       ),
       body: Watch(
         (context) => RefreshIndicator(
-          onRefresh: getPost,
+          onRefresh: onRefresh,
           child: switch (posts.value) {
             SuccessState(value: final posts) => ListView.separated(
                 padding: const EdgeInsets.all(24),
@@ -75,22 +86,5 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
         ),
       ),
     );
-  }
-
-  @override
-  void closeLoadingDialog() {
-    if (mounted && Navigator.of(context).canPop() && isDialogOpen) Navigator.of(context).pop();
-  }
-
-  @override
-  void showLoadingDialog() {
-    if (mounted) {
-      showDialog(
-        context: context,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
   }
 }
