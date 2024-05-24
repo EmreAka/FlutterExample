@@ -16,7 +16,7 @@ class DogListWidget extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       controller: scrollController,
-      separatorBuilder: (context, index) => const SizedBox(height: 20),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemCount: dogs.length,
       itemBuilder: (context, index) {
         final dog = dogs[index];
