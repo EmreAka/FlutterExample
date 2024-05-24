@@ -58,6 +58,8 @@ mixin DogsMixin on State<DogsView> {
   }
 
   Future<void> _loadMoreDogs() async {
+    if (viewState is! LoadedState) return;
+
     final loadedState = viewState as LoadedState;
 
     setState(() {
