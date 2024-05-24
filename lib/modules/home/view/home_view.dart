@@ -31,6 +31,12 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
         actions: [
           IconButton(
             onPressed: () {
+              context.pushNamed('dogs');
+            },
+            icon: const Icon(Icons.square_foot_outlined),
+          ),
+          IconButton(
+            onPressed: () {
               StoreProvider.getUserStore(context).signOut();
             },
             icon: const Icon(Icons.logout),

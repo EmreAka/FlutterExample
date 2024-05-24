@@ -1,6 +1,7 @@
 import 'package:flutter_example/core/theme/theme.dart';
 import 'package:flutter_example/core/theme/util.dart';
 import 'package:flutter_example/modules/auth/views/login_view.dart';
+import 'package:flutter_example/modules/dog/view/dogs_view.dart';
 import 'package:flutter_example/modules/file/view/file_view.dart';
 import 'package:flutter_example/modules/home/view/home_view.dart';
 import 'package:flutter_example/service_locator.dart';
@@ -65,6 +66,15 @@ class MyApp extends StatelessWidget {
               builder: (context, state) {
                 return FileView(
                   fileService: di.get(),
+                );
+              },
+            ),
+            GoRoute(
+              path: '/dogs',
+              name: 'dogs',
+              builder: (context, state) {
+                return DogsView(
+                  dogService: di.get(),
                 );
               },
             ),

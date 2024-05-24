@@ -11,6 +11,8 @@ import 'package:flutter_example/core/services/file/open_file_manager.dart';
 //import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/core/services/network/http_network_manager.dart';
 import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
+import 'package:flutter_example/modules/dog/interfaces/dog_service_interface.dart';
+import 'package:flutter_example/modules/dog/service/dog_service.dart';
 import 'package:flutter_example/shared/services/auth_service.dart';
 import 'package:flutter_example/modules/file/interfaces/file_service_interface.dart';
 import 'package:flutter_example/modules/file/service/file_service.dart';
@@ -107,6 +109,8 @@ class DependencyInjection {
     _serviceLocator.registerSingleton(FileStore());
 
     _serviceLocator.registerFactory<IOpenFileManager>(() => OpenFileXManager());
+
+    _serviceLocator.registerFactory<IDogService>(() => DogService());
 
     await _serviceLocator.allReady();
     return _serviceLocator;
