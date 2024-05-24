@@ -11,8 +11,8 @@ class FailedInformationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         Center(
           child: Text(

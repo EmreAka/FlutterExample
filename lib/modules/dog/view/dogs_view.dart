@@ -28,30 +28,44 @@ class _DogsViewState extends State<DogsView> with DogsMixin {
         bottom: _buildBottomWidget(),
       ),
       body: RefreshIndicator(
-        onRefresh: onRefresh,
-        child: _buildDogsWidget(),
-      ),
+          onRefresh: onRefresh,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: scrollController,
+            children: [
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'Search',
+                  hintText: 'Search',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              _buildDogsWidget(),
+            ],
+          )),
     );
   }
 
   StatelessWidget _buildDogsWidget() {
     return switch (viewState) {
-          LoadedState(dogs: final dogs) => DogListWidget(dogs: dogs, scrollController: scrollController),
-          LoadingMoreState(dogs: final dogs) =>
-            DogListWidget(dogs: dogs, scrollController: scrollController),
-          RefreshingState(dogs: final dogs) =>
-            DogListWidget(dogs: dogs, scrollController: scrollController),
-          FailedState(error: final error) => FailedInformationWidget(error: error),
-          _ => const IdleListWidget(),
-        };
+      LoadedState(dogs: final dogs) => DogListWidget(dogs: dogs),
+      LoadingMoreState(dogs: final dogs) => DogListWidget(dogs: dogs),
+      RefreshingState(dogs: final dogs) => DogListWidget(dogs: dogs),
+      FailedState(error: final error) => FailedInformationWidget(error: error),
+      _ => const IdleListWidget(),
+    };
   }
 
   LoadingIndicatorWidget? _buildBottomWidget() {
     return switch (viewState) {
-        LoadingState() => const LoadingIndicatorWidget(),
-        LoadingMoreState() => const LoadingIndicatorWidget(),
-        RefreshingState() => const LoadingIndicatorWidget(),
-        _ => null,
-      };
+      LoadingState() => const LoadingIndicatorWidget(),
+      LoadingMoreState() => const LoadingIndicatorWidget(),
+      RefreshingState() => const LoadingIndicatorWidget(),
+      _ => null,
+    };
   }
 }
