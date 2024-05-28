@@ -37,3 +37,15 @@ final class LoadedState extends DogViewState {
     this.isAllLoaded,
   );
 }
+
+final class SearcingState extends DogViewState {
+  final List<DogModel> dogs;
+
+  SearcingState(this.dogs);
+}
+
+final class SearchLoadedState extends DogViewState {
+  final List<DogModel> dogs;
+
+  SearchLoadedState(this.dogs);
+}

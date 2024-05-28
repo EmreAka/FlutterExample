@@ -6,6 +6,10 @@ import 'package:flutter_example/modules/dog/view/dogs_view.dart';
 mixin DogsMixin on State<DogsView> {
   DogViewState viewState = IdleState();
 
+  bool get isLoaded => viewState is LoadedState || viewState is SearchLoadedState;
+
+  bool get isSearching => viewState is SearcingState;
+
   final _scrollController = ScrollController();
 
   ScrollController get scrollController => _scrollController;
@@ -28,12 +32,14 @@ mixin DogsMixin on State<DogsView> {
   }
 
   Future<void> onRefresh() async {
-    setState(() {
-      viewState = switch (viewState) {
-        LoadedState(dogs: final dogs) => RefreshingState(dogs),
-        _ => LoadingState(),
-      };
-    });
+    if (mounted) {
+      setState(() {
+        viewState = switch (viewState) {
+          LoadedState(dogs: final dogs) => RefreshingState(dogs),
+          _ => LoadingState(),
+        };
+      });
+    }
 
     final result = await widget.dogService.getDogsPaginated(page: 1, pageSize: 10);
 
@@ -42,9 +48,11 @@ mixin DogsMixin on State<DogsView> {
       Failure(exception: final error) => FailedState(error),
     };
 
-    setState(() {
-      viewState = state;
-    });
+    if (mounted) {
+      setState(() {
+        viewState = state;
+      });
+    }
   }
 
   void _registerScrollControllerListener() {
@@ -58,13 +66,15 @@ mixin DogsMixin on State<DogsView> {
   }
 
   Future<void> _loadMoreDogs() async {
-    if (viewState is! LoadedState) return;
+    if (!isLoaded) return;
 
     final loadedState = viewState as LoadedState;
 
-    setState(() {
-      viewState = LoadingMoreState(loadedState.dogs);
-    });
+    if (mounted) {
+      setState(() {
+        viewState = LoadingMoreState(loadedState.dogs);
+      });
+    }
 
     final result = await widget.dogService.getDogsPaginated(
       page: loadedState.page + 1,
@@ -81,15 +91,19 @@ mixin DogsMixin on State<DogsView> {
       Failure(exception: final error) => FailedState(error),
     };
 
-    setState(() {
-      viewState = state;
-    });
+    if (mounted) {
+      setState(() {
+        viewState = state;
+      });
+    }
   }
 
   Future<void> _loadDogs() async {
-    setState(() {
-      viewState = LoadingState();
-    });
+    if (mounted) {
+      setState(() {
+        viewState = LoadingState();
+      });
+    }
 
     final result = await widget.dogService.getDogsPaginated(page: 1, pageSize: 10);
 
@@ -98,8 +112,41 @@ mixin DogsMixin on State<DogsView> {
       Failure(exception: final error) => FailedState(error),
     };
 
-    setState(() {
-      viewState = state;
-    });
+    if (mounted) {
+      setState(() {
+        viewState = state;
+      });
+    }
+  }
+
+  Future<void> onSearch(String text) async {
+    if (text.isEmpty) {
+      _loadDogs();
+      return;
+    }
+
+    final state = switch (viewState) {
+      LoadedState(dogs: final dogs) => SearcingState(dogs),
+      _ => SearcingState([]),
+    };
+
+    if (mounted) {
+      setState(() {
+        viewState = state;
+      });
+    }
+
+    final result = await widget.dogService.searchDogs(query: text);
+
+    final searchState = switch (result) {
+      Success(value: final dogs) => SearchLoadedState(dogs),
+      Failure(exception: final error) => FailedState(error),
+    };
+
+    if (mounted) {
+      setState(() {
+        viewState = searchState;
+      });
+    }
   }
 }

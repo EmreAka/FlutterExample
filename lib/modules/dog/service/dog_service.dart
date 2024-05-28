@@ -93,5 +93,29 @@ class DogService implements IDogService {
     }
   }
 
+  Future<Result<List<DogModel>, Exception>> searchDogs({
+    required String query,
+  }) async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      final dogs = _dogs
+          .where(
+            (dog) =>
+                _contains(data: dog.name, query: query) ||
+                _contains(data: dog.breed, query: query) ||
+                _contains(data: dog.description, query: query),
+          )
+          .toList();
+
+      return Success(dogs);
+    } catch (e) {
+      return Failure(Exception('Failed to load dogs'));
+    }
+  }
+
+  bool _contains({required String data, required String query}) =>
+      data.toLowerCase().contains(query.toLowerCase());
+
   bool _isStartIndexIsHigherThanTheLengthOfTheList(int start) => start >= _dogs.length;
 }

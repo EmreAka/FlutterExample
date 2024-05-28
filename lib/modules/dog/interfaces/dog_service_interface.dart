@@ -6,4 +6,8 @@ abstract interface class IDogService {
     required int page,
     required int pageSize,
   });
+
+  Future<Result<List<DogModel>, Exception>> searchDogs({
+    required String query,
+  });
 }
