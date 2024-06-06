@@ -93,6 +93,7 @@ class DogService implements IDogService {
     }
   }
 
+  @override
   Future<Result<List<DogModel>, Exception>> searchDogs({
     required String query,
   }) async {

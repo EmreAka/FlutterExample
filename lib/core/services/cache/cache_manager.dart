@@ -4,9 +4,9 @@ import 'package:flutter_example/core/models/cache/cache_model.dart';
 import 'package:flutter_example/core/models/result_model.dart';
 
 class CacheManager implements ICacheManager {
-  late final ICacheRepositoryAsync _cacheDatabaseManager;
+  final ICacheRepositoryAsync _cacheDatabaseManager;
 
-  CacheManager(this._cacheDatabaseManager);
+  CacheManager(ICacheRepositoryAsync cacheDatabaseManager) : _cacheDatabaseManager = cacheDatabaseManager;
 
   @override
   Future<Result<T, Exception>> getItem<T>(String key) async {
@@ -41,8 +41,7 @@ class CacheManager implements ICacheManager {
   }
 
   @override
-  Future<Result<bool, Exception>> putItem<T>(
-      String key, T item, Duration duration) async {
+  Future<Result<bool, Exception>> putItem<T>(String key, T item, Duration duration) async {
     try {
       final cacheModel = CacheModel(
         expiration: DateTime.now().add(duration),
