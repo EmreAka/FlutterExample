@@ -7,10 +7,12 @@ import 'package:flutter_example/modules/home/view/home_view.dart';
 import 'package:flutter_example/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_example/shared/providers/store_provider.dart';
+import 'package:flutter_example/shared/stores/user_store.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:signals/signals_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +46,15 @@ class MyApp extends StatelessWidget {
         title: 'Caching',
         theme: theme.dark(),
         routerConfig: GoRouter(
-          initialLocation: '/login',
+          initialLocation: '/home',
+          refreshListenable: di.get<UserStore>().isLoggedIn.toValueListenable(),
+          redirect: (context, state) {
+            if (di.get<UserStore>().isLoggedIn()) {
+              return null;
+            }
+
+            return '/login';
+          },
           routes: [
             GoRoute(
               path: '/login',

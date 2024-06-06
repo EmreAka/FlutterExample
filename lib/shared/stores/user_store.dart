@@ -13,6 +13,7 @@ final class UserStore {
   final _user = signal<UserModel?>(null);
 
   ReadonlySignal<UserModel?> get user => _user.readonly();
+  ReadonlySignal<bool> get isLoggedIn => computed(() => _user() != null);
 
   Future<Result<UserModel, Exception>> signIn({
     required String email,

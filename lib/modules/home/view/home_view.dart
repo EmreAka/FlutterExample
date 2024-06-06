@@ -37,15 +37,15 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
           ),
           IconButton(
             onPressed: () {
-              StoreProvider.getUserStore(context).signOut();
-            },
-            icon: const Icon(Icons.logout),
-          ),
-          IconButton(
-            onPressed: () {
               context.pushNamed('file');
             },
             icon: const Icon(Icons.file_download),
+          ),
+          IconButton(
+            onPressed: () {
+              StoreProvider.getUserStore(context).signOut();
+            },
+            icon: const Icon(Icons.logout),
           ),
         ],
         bottom: PreferredSize(
