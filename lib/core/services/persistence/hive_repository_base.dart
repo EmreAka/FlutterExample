@@ -55,5 +55,11 @@ class HiveRepositoryBase<T> implements IRepositoryAsync<T> {
     if (!Hive.isAdapterRegistered(HiveConstants.postTypeId)) {
       Hive.registerAdapter(PostModelAdapter(), override: true);
     }
+    if (!Hive.isAdapterRegistered(HiveConstants.expirableTypeId)) {
+      Hive.registerAdapter(ExpirableAdapter(), override: true);
+    }
+    if (!Hive.isAdapterRegistered(HiveConstants.nonExpirableTypeId)) {
+      Hive.registerAdapter(NonExpirableAdapter(), override: true);
+    }
   }
 }

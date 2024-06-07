@@ -34,7 +34,12 @@ class HomeService implements IHomeService {
 
     if (posts is Success) {
       log('Cache write', name: 'HomeService.getPosts');
-      await _cacheManager.putItem('posts', (posts as Success).value, const Duration(minutes: 1));
+      
+      await _cacheManager.putItem(
+        'posts',
+        (posts as Success).value,
+        duration: const Duration(minutes: 1),
+      );
     }
 
     return posts;

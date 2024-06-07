@@ -6,7 +6,7 @@ part 'cache_model.g.dart';
 @HiveType(typeId: HiveConstants.cacheTypeId)
 class CacheModel {
   @HiveField(1)
-  final DateTime expiration;
+  final Expire expiration;
 
   @HiveField(2)
   final dynamic value;
@@ -15,4 +15,19 @@ class CacheModel {
     required this.expiration,
     required this.value,
   });
+}
+
+sealed class Expire {}
+
+@HiveType(typeId: HiveConstants.expirableTypeId)
+class Expirable extends Expire {
+  @HiveField(1)
+  final DateTime expiration;
+
+  Expirable(this.expiration);
+}
+
+@HiveType(typeId: HiveConstants.nonExpirableTypeId)
+class NonExpirable extends Expire {
+  NonExpirable();
 }

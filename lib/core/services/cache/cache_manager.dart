@@ -12,7 +12,7 @@ class CacheManager implements ICacheManager {
   Future<Result<T, Exception>> getItem<T>(String key) async {
     try {
       final cacheResult = await _cacheDatabaseManager.getItem(key);
-      final isValid = await _validateCache(cacheResult);
+      final isValid = await _validateCache(key, cacheResult);
 
       if (!isValid) {
         return Failure(Exception('Cache is not valid'));
@@ -28,7 +28,7 @@ class CacheManager implements ICacheManager {
   Future<Result<List<T>, Exception>> getItems<T>(String key) async {
     try {
       final cacheResult = await _cacheDatabaseManager.getItem(key);
-      final isValid = await _validateCache(cacheResult);
+      final isValid = await _validateCache(key, cacheResult);
 
       if (!isValid) {
         return Failure(Exception('Cache is not valid'));
@@ -41,10 +41,10 @@ class CacheManager implements ICacheManager {
   }
 
   @override
-  Future<Result<bool, Exception>> putItem<T>(String key, T item, Duration duration) async {
+  Future<Result<bool, Exception>> putItem<T>(String key, T item, {Duration? duration}) async {
     try {
       final cacheModel = CacheModel(
-        expiration: DateTime.now().add(duration),
+        expiration: duration == null ? NonExpirable() : Expirable(DateTime.now().add(duration)),
         value: item,
       );
 
@@ -75,17 +75,20 @@ class CacheManager implements ICacheManager {
     }
   }
 
-  Future<bool> _validateCache(CacheModel? model) async {
+  Future<bool> _validateCache(String key, CacheModel? model) async {
     if (model == null) {
-      await clearAll();
       return false;
     }
 
-    if (model.expiration.isBefore(DateTime.now())) {
-      await clearAll();
-      return false;
+    switch (model.expiration) {
+      case Expirable(expiration: final expiration):
+        if (expiration.isBefore(DateTime.now())) {
+          await removeItem(key);
+          return false;
+        }
+        return true;
+      case NonExpirable():
+        return true;
     }
-
-    return true;
   }
 }

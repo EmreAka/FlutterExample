@@ -1,7 +1,8 @@
 import 'package:flutter_example/core/models/result_model.dart';
 
 abstract class ICacheManager {
-  Future<Result<bool, Exception>> putItem<T>(String key, T item, Duration duration);
+  /// If [duration] is null, the item will be stored indefinitely.
+  Future<Result<bool, Exception>> putItem<T>(String key, T item, {Duration? duration});
 
   Future<Result<T, Exception>> getItem<T>(String key);
 
