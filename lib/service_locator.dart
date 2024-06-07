@@ -10,7 +10,7 @@ import 'package:flutter_example/core/services/file/download_file_manager.dart';
 import 'package:flutter_example/core/services/file/open_file_manager.dart';
 //import 'package:flutter_example/core/services/network/dio_network_manager.dart';
 import 'package:flutter_example/core/services/network/http_network_manager.dart';
-import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
+import 'package:flutter_example/shared/interfaces/auth_service_interface.dart';
 import 'package:flutter_example/modules/dog/interfaces/dog_service_interface.dart';
 import 'package:flutter_example/modules/dog/service/dog_service.dart';
 import 'package:flutter_example/shared/services/auth_service.dart';

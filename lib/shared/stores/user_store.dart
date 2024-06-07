@@ -1,5 +1,5 @@
 import 'package:flutter_example/core/models/result_model.dart';
-import 'package:flutter_example/modules/auth/interfaces/auth_service_interface.dart';
+import 'package:flutter_example/shared/interfaces/auth_service_interface.dart';
 import 'package:flutter_example/shared/models/user.model.dart';
 import 'package:signals/signals_flutter.dart';
 
