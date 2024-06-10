@@ -2,6 +2,7 @@ import 'package:flutter_example/core/interfaces/repository_async_interface.dart'
 import 'package:flutter_example/shared/constants/hive_constants.dart';
 import 'package:flutter_example/core/models/cache/cache_model.dart';
 import 'package:flutter_example/modules/home/models/post/post_model.dart';
+import 'package:flutter_example/shared/models/user.model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveRepositoryBase<T> implements IRepositoryAsync<T> {
@@ -60,6 +61,18 @@ class HiveRepositoryBase<T> implements IRepositoryAsync<T> {
     }
     if (!Hive.isAdapterRegistered(HiveConstants.nonExpirableTypeId)) {
       Hive.registerAdapter(NonExpirableAdapter(), override: true);
+    }
+    if (!Hive.isAdapterRegistered(HiveConstants.userTypeId)) {
+      Hive.registerAdapter(UserModelAdapter(), override: true);
+    }
+    if (!Hive.isAdapterRegistered(HiveConstants.companyTypeId)) {
+      Hive.registerAdapter(CompanyModelAdapter(), override: true);
+    }
+    if (!Hive.isAdapterRegistered(HiveConstants.addressTypeId)) {
+      Hive.registerAdapter(AddressModelAdapter(), override: true);
+    }
+    if (!Hive.isAdapterRegistered(HiveConstants.geoTypeId)) {
+      Hive.registerAdapter(GeoModelAdapter(), override: true);
     }
   }
 }

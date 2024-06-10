@@ -18,7 +18,7 @@ class CacheManager implements ICacheManager {
         return Failure(Exception('Cache is not valid'));
       }
 
-      return Success(cacheResult!.value);
+      return Success(cacheResult!.value as T);
     } catch (e) {
       return Failure(Exception(e.toString()));
     }
