@@ -1,26 +1,14 @@
 import 'package:flutter_example/core/models/model_interface.dart';
-import 'package:flutter_example/shared/constants/hive_constants.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-part 'user.model.g.dart';
 
-@HiveType(typeId: HiveConstants.userTypeId)
 class UserModel implements IModel<UserModel> {
-  @HiveField(0)
   int? id;
-  @HiveField(1)
   String? name;
-  @HiveField(2)
   String? username;
-  @HiveField(3)
   String? email;
-  @HiveField(4)
   AddressModel? address;
-  @HiveField(5)
   String? phone;
-  @HiveField(6)
   String? website;
-  @HiveField(7)
   CompanyModel? company;
 
   UserModel(
@@ -68,17 +56,11 @@ class UserModel implements IModel<UserModel> {
   UserModel fromJson(Map<String, Object?> json) => UserModel.fromJson(json);
 }
 
-@HiveType(typeId: HiveConstants.addressTypeId)
 class AddressModel implements IModel<AddressModel>{
-  @HiveField(0)
   String? street;
-  @HiveField(1)
   String? suite;
-  @HiveField(2)
   String? city;
-  @HiveField(3)
   String? zipcode;
-  @HiveField(4)
   GeoModel? geo;
 
   AddressModel({this.street, this.suite, this.city, this.zipcode, this.geo});
@@ -108,11 +90,8 @@ class AddressModel implements IModel<AddressModel>{
   AddressModel fromJson(Map<String, Object?> json) => AddressModel.fromJson(json);
 }
 
-@HiveType(typeId: HiveConstants.geoTypeId)
 class GeoModel implements IModel<GeoModel>{
-  @HiveField(0)
   String? lat;
-  @HiveField(1)
   String? lng;
 
   GeoModel({this.lat, this.lng});
@@ -134,13 +113,9 @@ class GeoModel implements IModel<GeoModel>{
   GeoModel fromJson(Map<String, Object?> json) => GeoModel.fromJson(json);
 }
 
-@HiveType(typeId: HiveConstants.companyTypeId)
 class CompanyModel implements IModel<CompanyModel>{
-  @HiveField(0)
   String? name;
-  @HiveField(1)
   String? catchPhrase;
-  @HiveField(2)
   String? bs;
 
   CompanyModel({this.name, this.catchPhrase, this.bs});
