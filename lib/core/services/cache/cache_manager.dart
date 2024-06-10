@@ -16,7 +16,13 @@ class CacheManager implements ICacheManager {
   Future<Result<T, Exception>> getItem<T>(String key, T Function(Map<String, Object?>) fromJson) async {
     try {
       final cacheResult = await _cacheDatabaseManager.getItem(key);
-      final cacheResultJson = cacheResult != null ? jsonDecode(cacheResult) : null;
+
+      if (cacheResult == null) {
+        return Failure(Exception('Cache is empty'));
+      }
+
+      final cacheResultJson = jsonDecode(cacheResult);
+
       final cacheModel = CacheModel.fromJson(cacheResultJson);
       final isValid = await _validateCache(key, cacheModel);
 
@@ -40,7 +46,13 @@ class CacheManager implements ICacheManager {
       String key, T Function(Map<String, Object?>) fromJson) async {
     try {
       final cacheResult = await _cacheDatabaseManager.getItem(key);
-      final cacheResultJson = cacheResult != null ? jsonDecode(cacheResult) : null;
+
+      if (cacheResult == null) {
+        return Failure(Exception('Cache is empty'));
+      }
+
+      final cacheResultJson = jsonDecode(cacheResult);
+
       final cacheModel = CacheModel.fromJson(cacheResultJson);
       final isValid = await _validateCache(key, cacheModel);
 
@@ -94,11 +106,7 @@ class CacheManager implements ICacheManager {
     }
   }
 
-  Future<bool> _validateCache(String key, CacheModel? model) async {
-    if (model == null) {
-      return false;
-    }
-
+  Future<bool> _validateCache(String key, CacheModel model) async {
     switch (model.expiration) {
       case Expirable(expiration: final expiration):
         if (expiration.isBefore(DateTime.now())) {
