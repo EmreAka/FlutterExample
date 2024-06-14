@@ -24,7 +24,7 @@ class DogListWidget extends StatelessWidget {
           color: Theme.of(context).colorScheme.onInverseSurface,
           child: ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(dog.image),
+              backgroundImage: AssetImage(dog.image),
             ),
             title: Text(dog.name),
             subtitle: Text('${dog.breed} - ${dog.age} years old'),
