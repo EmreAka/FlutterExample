@@ -46,6 +46,14 @@ final class SearcingState extends DogViewState {
 
 final class SearchLoadedState extends DogViewState {
   final List<DogModel> dogs;
+  final int page;
+  final int pageSize;
+  final bool isAllLoaded;
 
-  SearchLoadedState(this.dogs);
+  SearchLoadedState(
+    this.dogs,
+    this.page,
+    this.pageSize,
+    this.isAllLoaded,
+  );
 }

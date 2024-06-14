@@ -35,6 +35,7 @@ class _DogsViewState extends State<DogsView> with DogsMixin {
           controller: scrollController,
           children: [
             TextField(
+              controller: searchTextFieldController,
               onChanged: onSearch,
               enabled: isLoaded || isSearching,
               decoration: const InputDecoration(

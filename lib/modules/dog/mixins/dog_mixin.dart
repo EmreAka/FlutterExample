@@ -16,6 +16,8 @@ mixin DogsMixin on State<DogsView> {
 
   bool get _isEndOfList => _scrollController.position.maxScrollExtent == _scrollController.offset;
 
+  final searchTextFieldController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +34,8 @@ mixin DogsMixin on State<DogsView> {
   }
 
   Future<void> onRefresh() async {
+    searchTextFieldController.clear();
+
     if (mounted) {
       setState(() {
         viewState = switch (viewState) {
@@ -60,6 +64,10 @@ mixin DogsMixin on State<DogsView> {
       () async {
         if (_isEndOfList && viewState is LoadedState && !(viewState as LoadedState).isAllLoaded) {
           await _loadMoreDogs();
+        }
+
+        if (_isEndOfList && viewState is SearchLoadedState && !(viewState as SearchLoadedState).isAllLoaded) {
+          await _loadMoreSearchResults();
         }
       },
     );
@@ -136,16 +144,50 @@ mixin DogsMixin on State<DogsView> {
       });
     }
 
-    final result = await widget.dogService.searchDogs(query: text);
+    final result = await widget.dogService.searchDogs(page: 1, pageSize: 10, query: text);
 
     final searchState = switch (result) {
-      Success(value: final dogs) => SearchLoadedState(dogs),
+      Success(value: final dogs) => SearchLoadedState(dogs, 1, 10, false),
       Failure(exception: final error) => FailedState(error),
     };
 
     if (mounted) {
       setState(() {
         viewState = searchState;
+      });
+    }
+  }
+
+  Future<void> _loadMoreSearchResults() async {
+    if (!isLoaded) return;
+
+    final loadedState = viewState as SearchLoadedState;
+
+    if (mounted) {
+      setState(() {
+        viewState = LoadingMoreState(loadedState.dogs);
+      });
+    }
+
+    final result = await widget.dogService.searchDogs(
+      page: loadedState.page + 1,
+      pageSize: loadedState.pageSize,
+      query: searchTextFieldController.text,
+    );
+
+    final state = switch (result) {
+      Success(value: final dogs) => SearchLoadedState(
+          loadedState.dogs + dogs,
+          loadedState.page + 1,
+          loadedState.pageSize,
+          dogs.isEmpty,
+        ),
+      Failure(exception: final error) => FailedState(error),
+    };
+
+    if (mounted) {
+      setState(() {
+        viewState = state;
       });
     }
   }

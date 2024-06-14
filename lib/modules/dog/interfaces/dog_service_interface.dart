@@ -8,6 +8,8 @@ abstract interface class IDogService {
   });
 
   Future<Result<List<DogModel>, Exception>> searchDogs({
+    required int page,
+    required int pageSize,
     required String query,
   });
 }

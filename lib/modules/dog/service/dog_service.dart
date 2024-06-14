@@ -78,14 +78,13 @@ class DogService implements IDogService {
     try {
       await Future.delayed(const Duration(milliseconds: 500));
 
+      if (page < 1) return Failure(Exception('Invalid page number'));
+      if (pageSize < 1) return Failure(Exception('Invalid page size'));
+
       final start = (page - 1) * pageSize;
       final end = start + pageSize;
 
-      if (_isStartIndexIsHigherThanTheLengthOfTheList(start)) {
-        return const Success([]);
-      }
-
-      final dogs = _dogs.sublist(start, end);
+      final dogs = _dogs.skip(start).take(end).toList();
 
       return Success(dogs);
     } catch (e) {
@@ -95,10 +94,18 @@ class DogService implements IDogService {
 
   @override
   Future<Result<List<DogModel>, Exception>> searchDogs({
+    required int page,
+    required int pageSize,
     required String query,
   }) async {
     try {
       await Future.delayed(const Duration(milliseconds: 500));
+
+      if (page < 1) return Failure(Exception('Invalid page number'));
+      if (pageSize < 1) return Failure(Exception('Invalid page size'));
+
+      final start = (page - 1) * pageSize;
+      final end = start + pageSize;
 
       final dogs = _dogs
           .where(
@@ -107,6 +114,8 @@ class DogService implements IDogService {
                 _contains(data: dog.breed, query: query) ||
                 _contains(data: dog.description, query: query),
           )
+          .skip(start)
+          .take(end)
           .toList();
 
       return Success(dogs);
@@ -117,6 +126,4 @@ class DogService implements IDogService {
 
   bool _contains({required String data, required String query}) =>
       data.toLowerCase().contains(query.toLowerCase());
-
-  bool _isStartIndexIsHigherThanTheLengthOfTheList(int start) => start >= _dogs.length;
 }
