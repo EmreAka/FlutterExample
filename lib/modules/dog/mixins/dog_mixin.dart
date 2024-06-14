@@ -40,6 +40,7 @@ mixin DogsMixin on State<DogsView> {
       setState(() {
         viewState = switch (viewState) {
           LoadedState(dogs: final dogs) => RefreshingState(dogs),
+          SearchLoadedState(dogs: final dogs) => RefreshingState(dogs),
           _ => LoadingState(),
         };
       });
