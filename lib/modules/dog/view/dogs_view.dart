@@ -6,6 +6,7 @@ import 'package:flutter_example/modules/dog/widgets/dog_list_widget.dart';
 import 'package:flutter_example/modules/dog/widgets/failed_information_widget.dart';
 import 'package:flutter_example/modules/dog/widgets/idle_list_widget.dart';
 import 'package:flutter_example/modules/dog/widgets/loading_indicator_widget.dart';
+import 'package:signals/signals_flutter.dart';
 
 class DogsView extends StatefulWidget {
   final IDogService dogService;
@@ -22,40 +23,42 @@ class DogsView extends StatefulWidget {
 class _DogsViewState extends State<DogsView> with DogsMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dogs'),
-        bottom: _buildBottomWidget(),
-      ),
-      body: RefreshIndicator(
-        onRefresh: onRefresh,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          physics: const AlwaysScrollableScrollPhysics(),
-          controller: scrollController,
-          children: [
-            TextField(
-              controller: searchTextFieldController,
-              onChanged: onSearch,
-              enabled: isLoaded || isSearching,
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                hintText: 'Search',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+    return Watch(
+      (context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Dogs'),
+          bottom: _buildBottomWidget(),
+        ),
+        body: RefreshIndicator(
+          onRefresh: onRefresh,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: scrollController,
+            children: [
+              TextField(
+                controller: searchTextFieldController,
+                onChanged: onSearch,
+                enabled: isLoaded || isSearching,
+                decoration: const InputDecoration(
+                  labelText: 'Search',
+                  hintText: 'Search',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            _buildDogsWidget(),
-          ],
+              const SizedBox(height: 10),
+              _buildDogsWidget(),
+            ],
+          ),
         ),
       ),
     );
   }
 
   StatelessWidget _buildDogsWidget() {
-    return switch (viewState) {
+    return switch (viewState()) {
       LoadedState(dogs: final dogs) => DogListWidget(dogs: dogs),
       LoadingMoreState(dogs: final dogs) => DogListWidget(dogs: dogs),
       RefreshingState(dogs: final dogs) => DogListWidget(dogs: dogs),
@@ -67,7 +70,7 @@ class _DogsViewState extends State<DogsView> with DogsMixin {
   }
 
   LoadingIndicatorWidget? _buildBottomWidget() {
-    return switch (viewState) {
+    return switch (viewState()) {
       LoadingState() => const LoadingIndicatorWidget(),
       LoadingMoreState() => const LoadingIndicatorWidget(),
       RefreshingState() => const LoadingIndicatorWidget(),
