@@ -23,7 +23,7 @@ class HomeService implements IHomeService {
 
   @override
   Future<Result<List<PostModel>, Exception>> getPosts() async {
-    final cachedResult = await _cacheManager.getItems<PostModel>('posts');
+    final cachedResult = await _cacheManager.getItems<PostModel>('posts', PostModel.fromJson);
 
     if (cachedResult is Success) {
       log('Cache read', name: 'HomeService.getPosts');
@@ -35,7 +35,7 @@ class HomeService implements IHomeService {
     if (posts is Success) {
       log('Cache write', name: 'HomeService.getPosts');
       
-      await _cacheManager.putItem(
+      await _cacheManager.putItems(
         'posts',
         (posts as Success).value,
         duration: const Duration(minutes: 1),

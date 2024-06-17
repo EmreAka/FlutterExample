@@ -1,5 +1,6 @@
 import 'package:flutter_example/core/models/model_interface.dart';
 
+
 class UserModel implements IModel<UserModel> {
   int? id;
   String? name;

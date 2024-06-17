@@ -85,6 +85,7 @@ class DependencyInjection {
     _serviceLocator.registerFactory<IAuthService>(
       () => AuthService(
         userHttpClient: _serviceLocator.get<IUserHttpClient>(),
+        cacheManager: _serviceLocator.get<ICacheManager>(),
       ),
     );
 
@@ -102,10 +103,13 @@ class DependencyInjection {
       ),
     );
 
-    _serviceLocator.registerSingleton(UserStore(
-      authService: _serviceLocator.get<IAuthService>(),
-    ));
-    
+    _serviceLocator.registerSingletonWithDependencies(
+      () => UserStore(
+        authService: _serviceLocator.get<IAuthService>(),
+      ),
+      dependsOn: [ICacheManager]
+    );
+
     _serviceLocator.registerSingleton(FileStore());
 
     _serviceLocator.registerFactory<IOpenFileManager>(() => OpenFileXManager());

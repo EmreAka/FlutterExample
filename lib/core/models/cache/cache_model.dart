@@ -1,33 +1,66 @@
-import 'package:flutter_example/shared/constants/hive_constants.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_example/core/models/model_interface.dart';
 
-part 'cache_model.g.dart';
-
-@HiveType(typeId: HiveConstants.cacheTypeId)
-class CacheModel {
-  @HiveField(1)
+class CacheModel implements IModel<CacheModel> {
   final Expire expiration;
 
-  @HiveField(2)
-  final dynamic value;
+  final String value;
 
   CacheModel({
     required this.expiration,
     required this.value,
   });
+
+  factory CacheModel.fromJson(Map<String, Object?> json) {
+    return CacheModel(
+      expiration: (json['expiration'] as Map<String, Object?>).isNotEmpty
+          ? Expirable.fromJson(json['expiration'] as Map<String, Object?>)
+          : NonExpirable(),
+      value: json['value'] as String,
+    );
+  }
+
+  @override
+  CacheModel fromJson(Map<String, Object?> json) => CacheModel.fromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => {
+        'expiration': expiration.toJson(),
+        'value': value,
+      };
 }
 
-sealed class Expire {}
+sealed class Expire implements IModel<Expire> {}
 
-@HiveType(typeId: HiveConstants.expirableTypeId)
 class Expirable extends Expire {
-  @HiveField(1)
   final DateTime expiration;
 
   Expirable(this.expiration);
+
+  factory Expirable.fromJson(Map<String, Object?> json) {
+    return Expirable(
+      DateTime.parse(json['expiration'] as String),
+    );
+  }
+
+  @override
+  fromJson(Map<String, Object?> json) => Expirable.fromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => {
+        'expiration': expiration.toIso8601String(),
+      };
 }
 
-@HiveType(typeId: HiveConstants.nonExpirableTypeId)
 class NonExpirable extends Expire {
   NonExpirable();
+
+  factory NonExpirable.fromJson(Map<String, Object?> json) {
+    return NonExpirable();
+  }
+
+  @override
+  NonExpirable fromJson(Map<String, Object?> json) => NonExpirable.fromJson(json);
+
+  @override
+  Map<String, Object?> toJson() => {};
 }

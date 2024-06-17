@@ -1,13 +1,13 @@
-abstract class IRepositoryAsync<T> {
+abstract class IRepositoryAsync {
   Future<void> clearAll();
 
-  Future<void> addItems(List<T> items);
+  Future<void> addItems(List<String> items);
 
-  Future<T?> getItem(String key);
+  Future<String?> getItem(String key);
 
-  Future<List<T>?> getValues();
+  Future<List<String>?> getValues();
 
-  Future<void> putItem(String key, T item);
+  Future<void> putItem(String key, String item);
 
   Future<void> removeItem(String key);
 }

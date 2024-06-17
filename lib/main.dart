@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:flutter_example/core/interfaces/cache_manager_interface.dart';
+import 'package:flutter_example/core/models/result_model.dart';
 import 'package:flutter_example/core/theme/theme.dart';
 import 'package:flutter_example/core/theme/util.dart';
 import 'package:flutter_example/modules/auth/views/login_view.dart';
@@ -6,6 +10,7 @@ import 'package:flutter_example/modules/file/view/file_view.dart';
 import 'package:flutter_example/modules/home/view/home_view.dart';
 import 'package:flutter_example/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_example/shared/models/user.model.dart';
 import 'package:flutter_example/shared/providers/store_provider.dart';
 import 'package:flutter_example/shared/stores/user_store.dart';
 import 'package:get_it/get_it.dart';
@@ -48,7 +53,16 @@ class MyApp extends StatelessWidget {
         routerConfig: GoRouter(
           initialLocation: '/home',
           refreshListenable: di.get<UserStore>().isLoggedIn.toValueListenable(),
-          redirect: (context, state) {
+          redirect: (context, state) async {
+            final userResult = await di.get<ICacheManager>().getItem<UserModel>('user', UserModel.fromJson);
+
+            final user = switch (userResult) {
+              Success(value: final user) => user,
+              Failure(exception: final _) => null,
+            };
+
+            log(user?.email ?? 'no user');
+
             if (di.get<UserStore>().isLoggedIn()) {
               return null;
             }
