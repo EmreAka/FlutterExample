@@ -13,6 +13,26 @@ void main() {
   late DogServiceMock dogServiceMock;
   late Widget widgetToTest;
 
+  final dogList = List.generate(
+    30,
+    (index) => DogModel(
+      age: 1,
+      breed: 'Poodle $index',
+      description: 'Max is an intelligent and elegant Poodle.',
+      name: 'Max',
+    ),
+  );
+
+  final searchedDogList = List.generate(
+    15,
+    (index) => DogModel(
+      age: 1,
+      breed: 'Golden retriever $index',
+      description: 'Max is an intelligent and elegant Poodle.',
+      name: 'Max',
+    ),
+  );
+
   setUp(() {
     dogServiceMock = DogServiceMock();
 
@@ -24,17 +44,8 @@ void main() {
   });
 
   group('List Dogs', () {
-    final dogList = List.generate(
-      30,
-      (index) => DogModel(
-        age: 1,
-        breed: 'Poodle $index',
-        description: 'Max is an intelligent and elegant Poodle.',
-        name: 'Max',
-      ),
-    );
-
-    testWidgets('Should list dogs when widget initialized', (widgetTester) async {
+    testWidgets('Should list dogs when widget initialized',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
@@ -47,7 +58,8 @@ void main() {
       expect(find.byType(Card), findsExactly(dogList.length));
     });
 
-    testWidgets('Should show error message when service fails', (widgetTester) async {
+    testWidgets('Should show error message when service fails',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
@@ -60,7 +72,8 @@ void main() {
       expect(find.byType(FailedInformationWidget), findsOneWidget);
     });
 
-    testWidgets('Should load more dogs when scrolling down', (widgetTester) async {
+    testWidgets('Should load more dogs when scrolling down',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(
           page: any(named: 'page'),
@@ -91,7 +104,9 @@ void main() {
       expect(find.byType(Card), findsExactly(dogList.length * 2));
     });
 
-    testWidgets('Should show an error view if a problem occurs while loading more', (widgetTester) async {
+    testWidgets(
+        'Should show an error view if a problem occurs while loading more',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(
           page: 1,
@@ -133,31 +148,12 @@ void main() {
   });
 
   group('Search Dogs', () {
-    final initialDogList = List.generate(
-      30,
-      (index) => DogModel(
-        age: 1,
-        breed: 'Poodle $index',
-        description: 'Max is an intelligent and elegant Poodle.',
-        name: 'Max',
-      ),
-    );
-
-    final searchedDogList = List.generate(
-      15,
-      (index) => DogModel(
-        age: 1,
-        breed: 'Golden retriever $index',
-        description: 'Max is an intelligent and elegant Poodle.',
-        name: 'Max',
-      ),
-    );
-
-    testWidgets('Should search dogs when typing on search field', (widgetTester) async {
+    testWidgets('Should search dogs when typing on search field',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
-        return Success(initialDogList);
+        return Success(dogList);
       });
 
       when(
@@ -181,11 +177,12 @@ void main() {
       expect(find.byType(Card), findsExactly(searchedDogList.length));
     });
 
-    testWidgets('Should show error message when search service fails', (widgetTester) async {
+    testWidgets('Should show error message when search service fails',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
-        return Success(initialDogList);
+        return Success(dogList);
       });
 
       when(
@@ -209,11 +206,12 @@ void main() {
       expect(find.byType(FailedInformationWidget), findsOneWidget);
     });
 
-    testWidgets('Should return all dogs if search text is empty', (widgetTester) async {
+    testWidgets('Should return all dogs if search text is empty',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
-        return Success(initialDogList);
+        return Success(dogList);
       });
 
       when(
@@ -239,7 +237,7 @@ void main() {
       await widgetTester.enterText(searchField, '');
       await widgetTester.pumpAndSettle();
 
-      expect(find.byType(Card), findsExactly(initialDogList.length));
+      expect(find.byType(Card), findsExactly(dogList.length));
     });
 
     testWidgets('Should search more when user scrolls', (widgetTester) async {
@@ -249,7 +247,7 @@ void main() {
           pageSize: 10,
         ),
       ).thenAnswer((_) async {
-        return Success(initialDogList);
+        return Success(dogList);
       });
 
       when(
@@ -298,14 +296,16 @@ void main() {
       expect(find.byType(Card), findsExactly(searchedDogList.length * 2));
     });
 
-    testWidgets('Should show error message if search more failes when user scrolls', (widgetTester) async {
+    testWidgets(
+        'Should show error message if search more failes when user scrolls',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(
           page: 1,
           pageSize: 10,
         ),
       ).thenAnswer((_) async {
-        return Success(initialDogList);
+        return Success(dogList);
       });
 
       when(
@@ -356,31 +356,11 @@ void main() {
   });
 
   group('Pull to Refresh', () {
-    final initialDogList = List.generate(
-      30,
-      (index) => DogModel(
-        age: 1,
-        breed: 'Poodle $index',
-        description: 'Max is an intelligent and elegant Poodle.',
-        name: 'Max',
-      ),
-    );
-
-    final searchedDogList = List.generate(
-      15,
-      (index) => DogModel(
-        age: 1,
-        breed: 'Golden retriever $index',
-        description: 'Max is an intelligent and elegant Poodle.',
-        name: 'Max',
-      ),
-    );
-
     setUp(() {
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
-        return Success(initialDogList);
+        return Success(dogList);
       });
 
       when(
@@ -394,7 +374,8 @@ void main() {
       });
     });
 
-    testWidgets('Should refresh dogs when user pulls to refresh', (widgetTester) async {
+    testWidgets('Should refresh dogs when user pulls to refresh',
+        (widgetTester) async {
       await widgetTester.pumpWidget(widgetToTest);
       await widgetTester.pumpAndSettle();
 
@@ -403,10 +384,11 @@ void main() {
       await widgetTester.drag(refreshIndicator, const Offset(0, 300));
       await widgetTester.pumpAndSettle();
 
-      expect(find.byType(Card), findsExactly(initialDogList.length));
+      expect(find.byType(Card), findsExactly(dogList.length));
     });
 
-    testWidgets('Should show error message if refresh fails', (widgetTester) async {
+    testWidgets('Should show error message if refresh fails',
+        (widgetTester) async {
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
