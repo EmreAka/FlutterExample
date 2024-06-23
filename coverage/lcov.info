@@ -65,8 +65,8 @@ DA:40,1
 DA:41,2
 DA:43,4
 DA:44,3
-DA:45,1
-DA:46,1
+DA:45,0
+DA:46,0
 DA:50,3
 DA:53,3
 DA:54,3
@@ -129,7 +129,7 @@ DA:159,1
 DA:161,3
 DA:164,2
 LF:81
-LH:80
+LH:78
 end_of_record
 SF:lib/modules/dog/widgets/failed_information_widget.dart
 DA:4,1

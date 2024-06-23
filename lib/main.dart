@@ -54,7 +54,9 @@ class MyApp extends StatelessWidget {
           initialLocation: '/home',
           refreshListenable: di.get<UserStore>().isLoggedIn.toValueListenable(),
           redirect: (context, state) async {
-            final userResult = await di.get<ICacheManager>().getItem<UserModel>('user', UserModel.fromJson);
+            final userResult = await di
+                .get<ICacheManager>()
+                .getItem<UserModel>('user', UserModel.fromJson);
 
             final user = switch (userResult) {
               Success(value: final user) => user,

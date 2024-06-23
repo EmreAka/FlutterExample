@@ -362,16 +362,6 @@ void main() {
       ).thenAnswer((_) async {
         return Success(dogList);
       });
-
-      when(
-        () => dogServiceMock.searchDogs(
-          page: 1,
-          pageSize: 10,
-          query: any(named: 'query'),
-        ),
-      ).thenAnswer((_) async {
-        return Success(searchedDogList);
-      });
     });
 
     testWidgets('Should refresh dogs when user pulls to refresh',
@@ -379,24 +369,34 @@ void main() {
       await widgetTester.pumpWidget(widgetToTest);
       await widgetTester.pumpAndSettle();
 
+      expect(find.byType(Card), findsExactly(dogList.length));
+
+      when(
+        () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
+      ).thenAnswer((_) async {
+        return Success(searchedDogList);
+      });
+
       final refreshIndicator = find.byType(RefreshIndicator);
 
       await widgetTester.drag(refreshIndicator, const Offset(0, 300));
       await widgetTester.pumpAndSettle();
 
-      expect(find.byType(Card), findsExactly(dogList.length));
+      expect(find.byType(Card), findsExactly(searchedDogList.length));
     });
 
     testWidgets('Should show error message if refresh fails',
         (widgetTester) async {
+      await widgetTester.pumpWidget(widgetToTest);
+      await widgetTester.pumpAndSettle();
+
+      expect(find.byType(Card), findsExactly(dogList.length));
+
       when(
         () => dogServiceMock.getDogsPaginated(page: 1, pageSize: 10),
       ).thenAnswer((_) async {
         return Failure(Exception('Error'));
       });
-
-      await widgetTester.pumpWidget(widgetToTest);
-      await widgetTester.pumpAndSettle();
 
       final refreshIndicator = find.byType(RefreshIndicator);
 
